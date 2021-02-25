@@ -1,0 +1,23 @@
+type Group @model {
+  id: ID!
+  name: String!
+  prayers: [Prayer] @connection(keyName: "byGroup", fields: ["id"])
+}
+
+type Prayer @model 
+            @key(name: "byGroup", fields: ["groupID"]) {
+  id: ID!
+  title: String!
+  description: String
+  groupID: ID
+  group: Group @connection(fields: ["groupID"])
+  answers: [Answer] @connection(keyName: "byPrayer", fields: ["id"])
+}
+
+type Answer  @model 
+             @key(name: "byPrayer", fields: ["prayerID", "content"]) {
+  id: ID!
+  prayerID: ID!
+  prayer: Prayer @connection(fields: ["prayerID"])
+  content: String!
+}

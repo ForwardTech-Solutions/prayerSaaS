@@ -6,7 +6,7 @@
     }
   },
   "api": {
-    "prayrreactwebappapi": {
+    "prayrwebappapi": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {

@@ -1,90 +1,270 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTask = /* GraphQL */ `
-  mutation CreateTask(
-    $input: CreateTaskInput!
-    $condition: ModelTaskConditionInput
+export const createGroup = /* GraphQL */ `
+  mutation CreateGroup(
+    $input: CreateGroupInput!
+    $condition: ModelGroupConditionInput
   ) {
-    createTask(input: $input, condition: $condition) {
+    createGroup(input: $input, condition: $condition) {
+      id
+      name
+      prayers {
+        items {
+          id
+          title
+          description
+          groupID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGroup = /* GraphQL */ `
+  mutation UpdateGroup(
+    $input: UpdateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    updateGroup(input: $input, condition: $condition) {
+      id
+      name
+      prayers {
+        items {
+          id
+          title
+          description
+          groupID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGroup = /* GraphQL */ `
+  mutation DeleteGroup(
+    $input: DeleteGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    deleteGroup(input: $input, condition: $condition) {
+      id
+      name
+      prayers {
+        items {
+          id
+          title
+          description
+          groupID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPrayer = /* GraphQL */ `
+  mutation CreatePrayer(
+    $input: CreatePrayerInput!
+    $condition: ModelPrayerConditionInput
+  ) {
+    createPrayer(input: $input, condition: $condition) {
       id
       title
       description
-      status
+      groupID
+      group {
+        id
+        name
+        prayers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answers {
+        items {
+          id
+          prayerID
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTask = /* GraphQL */ `
-  mutation UpdateTask(
-    $input: UpdateTaskInput!
-    $condition: ModelTaskConditionInput
+export const updatePrayer = /* GraphQL */ `
+  mutation UpdatePrayer(
+    $input: UpdatePrayerInput!
+    $condition: ModelPrayerConditionInput
   ) {
-    updateTask(input: $input, condition: $condition) {
+    updatePrayer(input: $input, condition: $condition) {
       id
       title
       description
-      status
+      groupID
+      group {
+        id
+        name
+        prayers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answers {
+        items {
+          id
+          prayerID
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTask = /* GraphQL */ `
-  mutation DeleteTask(
-    $input: DeleteTaskInput!
-    $condition: ModelTaskConditionInput
+export const deletePrayer = /* GraphQL */ `
+  mutation DeletePrayer(
+    $input: DeletePrayerInput!
+    $condition: ModelPrayerConditionInput
   ) {
-    deleteTask(input: $input, condition: $condition) {
+    deletePrayer(input: $input, condition: $condition) {
       id
       title
       description
-      status
+      groupID
+      group {
+        id
+        name
+        prayers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      answers {
+        items {
+          id
+          prayerID
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const createPrivateNote = /* GraphQL */ `
-  mutation CreatePrivateNote(
-    $input: CreatePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const createAnswer = /* GraphQL */ `
+  mutation CreateAnswer(
+    $input: CreateAnswerInput!
+    $condition: ModelAnswerConditionInput
   ) {
-    createPrivateNote(input: $input, condition: $condition) {
+    createAnswer(input: $input, condition: $condition) {
       id
+      prayerID
+      prayer {
+        id
+        title
+        description
+        groupID
+        group {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        answers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       content
       createdAt
       updatedAt
-      owner
     }
   }
 `;
-export const updatePrivateNote = /* GraphQL */ `
-  mutation UpdatePrivateNote(
-    $input: UpdatePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const updateAnswer = /* GraphQL */ `
+  mutation UpdateAnswer(
+    $input: UpdateAnswerInput!
+    $condition: ModelAnswerConditionInput
   ) {
-    updatePrivateNote(input: $input, condition: $condition) {
+    updateAnswer(input: $input, condition: $condition) {
       id
+      prayerID
+      prayer {
+        id
+        title
+        description
+        groupID
+        group {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        answers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       content
       createdAt
       updatedAt
-      owner
     }
   }
 `;
-export const deletePrivateNote = /* GraphQL */ `
-  mutation DeletePrivateNote(
-    $input: DeletePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const deleteAnswer = /* GraphQL */ `
+  mutation DeleteAnswer(
+    $input: DeleteAnswerInput!
+    $condition: ModelAnswerConditionInput
   ) {
-    deletePrivateNote(input: $input, condition: $condition) {
+    deleteAnswer(input: $input, condition: $condition) {
       id
+      prayerID
+      prayer {
+        id
+        title
+        description
+        groupID
+        group {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        answers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       content
       createdAt
       updatedAt
-      owner
     }
   }
 `;

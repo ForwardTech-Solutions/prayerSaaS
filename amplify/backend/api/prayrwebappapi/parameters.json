@@ -1,5 +1,5 @@
 {
-  "AppSyncApiName": "prayrreactwebappapi",
+  "AppSyncApiName": "prayrwebappapi",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
