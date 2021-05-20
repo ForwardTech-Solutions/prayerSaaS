@@ -8,11 +8,7 @@ import { withAuthenticator } from 'aws-amplify-react'
 import Amplify, { Auth } from 'aws-amplify';
 import aws_exports from './aws-exports';
 
-//appsync api
-import {API} from 'aws-amplify';
-import {listGroups, listPrayers as listPrayers} from './graphql/queries'
-import {createPrayer as createPrayer, deletePrayer as deletePrayer, createGroup} from './graphql/mutations'
-import { create, random, result } from 'lodash';
+
 
 //after imports
 Amplify.configure(aws_exports);
@@ -74,12 +70,12 @@ function App2() {
   }
 
   async function fetchMyPrayers() {
-    const apiData = await API.graphql({query: listPrayers});
-    setPrayers(apiData.data.listPrayers.items);
+    console.log("fetchMyPrayers not set up with the REST API yet")
+
   }
   async function fetchAllGroups() {
-    const apiData = await API.graphql({query: listGroups});
-    setAllGroups(apiData.data.listGroups.items);
+    console.log("fetchMyPrayers not set up with the REST API yet")   
+
   }
 
   async function createNewPrayer() {
@@ -97,7 +93,8 @@ function App2() {
     else
       formToSend = createPrayerFormData
 
-    await API.graphql({ query: createPrayer, variables: { input: formToSend } });
+
+    //await API.graphql({ query: createPrayer, variables: { input: formToSend } });
     setPrayers([ ...prayers, createPrayerFormData ]);
     setCreatePrayerFormData(initialCreatePrayerFormState);
   }
@@ -106,14 +103,14 @@ function App2() {
     var randomGroup = {
       name: makeid(6),
     }
-    await API.graphql({ query: createGroup, variables: { input: randomGroup } }).then(() => {fetchAllGroups()})
+    //await API.graphql({ query: createGroup, variables: { input: randomGroup } }).then(() => {fetchAllGroups()})
     // setAllGroups([ ...allGroups, randomGroup ]);
   }
 
   async function deletePrayerByID({ id }) {
     const newNotesArray = prayers.filter(note => note.id !== id);
     setPrayers(newNotesArray);
-    await API.graphql({ query: deletePrayer, variables: { input: { id } }});
+    //await API.graphql({ query: deletePrayer, variables: { input: { id } }});
   }
 
 
