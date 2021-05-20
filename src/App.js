@@ -9,7 +9,6 @@ import Amplify, { Auth } from 'aws-amplify';
 import aws_exports from './aws-exports';
 
 
-
 //after imports
 Amplify.configure(aws_exports);
 
@@ -70,9 +69,27 @@ function App2() {
   }
 
   async function fetchMyPrayers() {
-    console.log("fetchMyPrayers not set up with the REST API yet")
+    console.log("here we go")
+        
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+      mode: "cors"
+    };
+    
+    fetch("https://k4gzirvjnc.execute-api.us-east-1.amazonaws.com/dev/notes", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const parsed = JSON.parse(result)
+        setPrayers(parsed.notes)
+        console.log(JSON.parse(result))})
+      .catch(error => console.log('error', error));
+  
+    
+  
+    }
 
-  }
+
   async function fetchAllGroups() {
     console.log("fetchMyPrayers not set up with the REST API yet")   
 
@@ -154,8 +171,8 @@ function App2() {
                   prayers.map(prayer => (
                     <div key={prayer.id || prayer.title} style={{ border: '4px dotted lightblue'}}>
                       <h3>{prayer.title}</h3>
-                      <p className="smallText">{prayer.description}</p>
-                      <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p>
+                      <p className="smallText">{prayer.note}</p>
+                      {/* <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p> */}
                       {/* <button onClick={() => deletePrayerByID(note)}>Delete note</button> */}
                     </div>
                   ))
