@@ -77,11 +77,11 @@ function App2() {
       mode: "cors"
     };
     
-    fetch("https://k4gzirvjnc.execute-api.us-east-1.amazonaws.com/dev/notes", requestOptions)
+    fetch("https://js11d858xk.execute-api.us-east-1.amazonaws.com/dev/prayer", requestOptions)
       .then(response => response.text())
       .then(result => {
         const parsed = JSON.parse(result)
-        setPrayers(parsed.notes)
+        setPrayers(parsed.prayers)
         console.log(JSON.parse(result))})
       .catch(error => console.log('error', error));
   
@@ -171,7 +171,9 @@ function App2() {
                   prayers.map(prayer => (
                     <div key={prayer.id || prayer.title} style={{ border: '4px dotted lightblue'}}>
                       <h3>{prayer.title}</h3>
-                      <p className="smallText">{prayer.note}</p>
+                      <p >{prayer.prayer}</p>
+                      <p className="smallText">by:{prayer.username}</p>
+
                       {/* <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p> */}
                       {/* <button onClick={() => deletePrayerByID(note)}>Delete note</button> */}
                     </div>
