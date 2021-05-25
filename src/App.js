@@ -85,14 +85,25 @@ function App2() {
         console.log(JSON.parse(result))})
       .catch(error => console.log('error', error));
   
-    
-  
     }
 
 
   async function fetchAllGroups() {
-    console.log("fetchMyPrayers not set up with the REST API yet")   
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/group", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const parsed = JSON.parse(result)
+        setAllGroups(parsed.groups)
+        console.log(JSON.parse(result))
+      })
+      .catch(error => console.log('error', error));
 
+      
   }
 
   async function createNewPrayer() {
@@ -134,7 +145,10 @@ function App2() {
 
       fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+          console.log(result)
+          fetchMyPrayers()
+        })
         .catch(error => console.log('error', error));
     
 
@@ -147,8 +161,31 @@ function App2() {
 
   async function createNewGroup() {
     var randomGroup = {
-      name: makeid(6),
+      groupname: makeid(6),
     }
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          "groupname": randomGroup.groupname
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/group", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            console.log(result)
+            fetchAllGroups()
+          })
+          .catch(error => console.log('error', error));
+
     //await API.graphql({ query: createGroup, variables: { input: randomGroup } }).then(() => {fetchAllGroups()})
     // setAllGroups([ ...allGroups, randomGroup ]);
   }
@@ -195,7 +232,7 @@ function App2() {
           {/* column 3 */}
           <div style={{flex:1}}>
               <h1>{currentUser}'s Prayers </h1>
-              <div style={{marginBottom: 30}}>
+              <div style={{marginBottom: 30, padding: 3}}>
                 {
                   prayers.map(prayer => (
                     <div key={prayer.id || prayer.prayer} style={{ border: '4px dotted lightblue'}}>
@@ -220,8 +257,8 @@ function App2() {
               <div style={{marginBottom: 30}}>
                 {
                   allGroups.map(group => (
-                    <div key={group.id || group.name} style={{ border: '4px dotted lightblue'}}>
-                      <h2>{group.name}</h2>
+                    <div key={group.id || group.name} style={{ border: '4px dotted ' + group.groupname}}>
+                      <h2>{group.groupname}</h2>
                       <p className="smallText">PrayerCount: {getPrayerCountFromGroupID(group.id)}</p>
                       <button onClick={() => {
                             console.log('setactive button pressed');
