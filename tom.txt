@@ -1,0 +1,2 @@
+prayer GETall GETone GETme PUT
+group GET PUT

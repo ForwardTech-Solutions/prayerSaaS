@@ -15,8 +15,8 @@ Amplify.configure(aws_exports);
 
 //initials
 const initialCreatePrayerFormState = {
-  title: '',
-  description: '',
+  prayer: '',
+  //description: '',
   groupID: null,
 }
 
@@ -77,7 +77,7 @@ function App2() {
       mode: "cors"
     };
     
-    fetch("https://js11d858xk.execute-api.us-east-1.amazonaws.com/dev/prayer", requestOptions)
+    fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
       .then(response => response.text())
       .then(result => {
         const parsed = JSON.parse(result)
@@ -96,22 +96,51 @@ function App2() {
   }
 
   async function createNewPrayer() {
+
+    //1. populate formToSend dynamically
     var formToSend;
-    if (!createPrayerFormData.title) {
-      console.log('createPrayerStoppedEarly');
-      return;
-    }
-    else if (!createPrayerFormData.groupID) {
-      formToSend = {
-        title: createPrayerFormData.title,
-        description: createPrayerFormData.description
+      //a. if no prayer, stop
+      if (!createPrayerFormData.prayer) {
+        console.log('createPrayerStoppedEarly');
+        return;
       }
-    }
-    else
-      formToSend = createPrayerFormData
+      //b. if no group, don't include group
+      else if (!createPrayerFormData.groupID) {
+        formToSend = {
+          prayer: createPrayerFormData.prayer,
+          //description: createPrayerFormData.description
+        }
+      }
+      //c. if group, just grab createPrayerFormData
+      else
+        formToSend = createPrayerFormData
+
+    //2. Do the actual API work
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      //myHeaders.append("Access-Control-Allow-Origin", "*")
+
+      var putBody = JSON.stringify({
+        "username": currentUser,
+        "prayer": formToSend.prayer,
+      });
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: putBody,
+        redirect: 'follow'
+      };
+
+      fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    
 
 
     //await API.graphql({ query: createPrayer, variables: { input: formToSend } });
+    //3. Deal with local variables
     setPrayers([ ...prayers, createPrayerFormData ]);
     setCreatePrayerFormData(initialCreatePrayerFormState);
   }
@@ -144,15 +173,15 @@ function App2() {
             <h1>Add Prayer</h1>
 
               <input
-                onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'title': e.target.value})}
-                placeholder="Title"
-                value={createPrayerFormData.title}
+                onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
+                placeholder="Prayer"
+                value={createPrayerFormData.prayer}
               /> <br/>
-              <input
+              {/* <input
                 onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'description': e.target.value})}
                 placeholder="Description"
                 value={createPrayerFormData.description}
-              /> <br/>
+              /> <br/> */}
               <input
                 placeholder="Group"
                 value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
@@ -169,8 +198,7 @@ function App2() {
               <div style={{marginBottom: 30}}>
                 {
                   prayers.map(prayer => (
-                    <div key={prayer.id || prayer.title} style={{ border: '4px dotted lightblue'}}>
-                      <h3>{prayer.title}</h3>
+                    <div key={prayer.id || prayer.prayer} style={{ border: '4px dotted lightblue'}}>
                       <p >{prayer.prayer}</p>
                       <p className="smallText">by:{prayer.username}</p>
 
