@@ -9,8 +9,23 @@ import Amplify, { Auth } from 'aws-amplify';
 import aws_exports from './aws-exports';
 
 
+import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
+
+// import Button from 'react-bootstrap/Button'
+// import Container from 'react-bootstrap/Container'
+// import Row from 'react-bootstrap/Row'
+// import Col from 'react-bootstrap/Col'
+
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import Sidebar from "./dashboard/sidebar.js";
+import "./dashboard/Dashboard.css"
+
+
+
 //after imports
 Amplify.configure(aws_exports);
+
 
 
 //initials
@@ -19,6 +34,9 @@ const initialCreatePrayerFormState = {
   //description: '',
   groupID: null,
 }
+
+
+
 
 
 function App2() {
@@ -57,7 +75,7 @@ function App2() {
 
   function getGroupNameFromID (group_id) {
     if(!group_id) return 'invalidID'
-    var result = allGroups.find(({ id }) => id == group_id ).name
+    var result = allGroups.find(({ id }) => id == group_id ).groupname
     if(result != null) return result
     else return 'no result'
   }
@@ -134,6 +152,7 @@ function App2() {
       var putBody = JSON.stringify({
         "username": currentUser,
         "prayer": formToSend.prayer,
+        "prayergroup": formToSend.groupID ? getGroupNameFromID(formToSend.groupID) : null
       });
 
       var requestOptions = {
@@ -196,85 +215,234 @@ function App2() {
     //await API.graphql({ query: deletePrayer, variables: { input: { id } }});
   }
 
+  function returnIfExists(first, backup) {
+    if (first)
+      return first
+    else 
+      return backup
+  }
+
+
+
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div style={{display: 'flex', flexDirection: 'row'}}>
+    <>
+      <Navbar bg="dark" variant="dark" className="navbar" fixed="top" >
+        <Navbar.Brand>PrayerSaaS</Navbar.Brand>
+        
+      </Navbar>
 
-          {/* column 1 */}
-          <img src={logo} className="App-logo" alt="logo" />
+      <Container 
+        fluid
+        className="App-header"
+      >
+        <Row>
+            <Col xs={2} id="sidebar-wrapper">      
+              <Sidebar />
+            </Col>
+            <Col  xs={10} id="page-content-wrapper">
 
-          {/* column 2 */}
-          <div style={{flex:1}}>
-            <h1>Add Prayer</h1>
+        
 
-              <input
-                onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
-                placeholder="Prayer"
-                value={createPrayerFormData.prayer}
-              /> <br/>
-              {/* <input
-                onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'description': e.target.value})}
-                placeholder="Description"
-                value={createPrayerFormData.description}
-              /> <br/> */}
-              <input
-                placeholder="Group"
-                value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
-                readOnly
-              /> <br/>
-              {/* <p>{createPrayerFormData.groupID}</p> */}
-              <button onClick={() => createNewPrayer()}>Create Prayer</button>
-              
-            </div>
 
-          {/* column 3 */}
-          <div style={{flex:1}}>
-              <h1>{currentUser}'s Prayers </h1>
-              <div style={{marginBottom: 30, padding: 3}}>
-                {
-                  prayers.map(prayer => (
-                    <div key={prayer.id || prayer.prayer} style={{ border: '4px dotted lightblue'}}>
-                      <p >{prayer.prayer}</p>
-                      <p className="smallText">by:{prayer.username}</p>
 
-                      {/* <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p> */}
-                      {/* <button onClick={() => deletePrayerByID(note)}>Delete note</button> */}
-                    </div>
-                  ))
-                }
-              </div>
-          </div>
+          <Row className="align-items-center">
+          <Col>
+            {/* column 1 */}
+            <img src={logo} className="App-logo" alt="logo" />
+          </Col>
 
+
+          <Col >
+              {/* column 2 */}
+              <Card
+                bg={'dark'} 
+                style={{margin: 5}}
+              >
+                <Card.Body>
+                  <Card.Title>Add Prayer</Card.Title>
+                  <input
+                    onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
+                    placeholder="Prayer"
+                    value={createPrayerFormData.prayer}
+                  /> <br/>
+                  <input
+                    placeholder="Group"
+                    value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
+                    readOnly
+                  /> <br/>
+                  {/* <p>{createPrayerFormData.groupID}</p> */}
+                  <Button onClick={() => createNewPrayer()}>Create Prayer</Button>
+
+                </Card.Body>
+              </Card>
+      
+
+          </Col>
+
+        
+
+          <Col>
 
           {/* column 4 */}
-            <div style={{flex:1}}>
-              <h1>Groups</h1>
-              <button onClick={() => createNewGroup()}>Create New Group</button>
-              <button onClick={() => console.log(allGroups)}>printGroups</button>
+              <Card
+                bg={'dark'} 
+                //style={{margin: 5}}
+              >
+                <Card.Body>
+                  <Card.Title>Groups</Card.Title>
+                  <Button onClick={() => createNewGroup()}>Create New Group</Button>
+                </Card.Body>
+              </Card>
 
-              <div style={{marginBottom: 30}}>
+
+
                 {
                   allGroups.map(group => (
-                    <div key={group.id || group.name} style={{ border: '4px dotted ' + group.groupname}}>
-                      <h2>{group.groupname}</h2>
-                      <p className="smallText">PrayerCount: {getPrayerCountFromGroupID(group.id)}</p>
-                      <button onClick={() => {
+                  <Col>
+                    <Card
+                      bg={"dark"} 
+                      style={{ width: '18rem' }}
+                    >
+                      <Card.Header as="h5" style={{color: returnIfExists(group.groupname, 'lightblue')}}>
+                        <Row>
+                          <Col> {group.groupname} </Col>
+                          <Col> <Button onClick={() => {
                             console.log('setactive button pressed');
                             setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-                          }}>set as Active</button>
-                    </div>
+                          }}>use</Button> </Col>
+                        </Row>
+                        </Card.Header>
+        
+                    </Card>
+                  </Col>
                   ))
                 }
-              </div>
-            </div>
-        </div>
+          
+          </Col>
+
+          </Row>
+          <Row> 
+          
+          {/* column 3 */}
+            <Col>
+              <h1>{currentUser}'s Prayers </h1>
+            </Col>
+
+               {
+                 prayers.map(prayer => (
+                  <Col>
+                    <Card
+                      bg={"dark"} 
+                      style={{ width: '18rem' }}
+                    >
+                      <Card.Header as="h5">{prayer.prayer}</Card.Header>
+
+                      <Card.Body style={{color: returnIfExists(prayer.prayergroup, 'lightblue')}}>
+                        <p className="smallText">by:{prayer.username}</p>
+                        <p className="smallText">in:{prayer.prayergroup}</p>
+                      </Card.Body>
+                    </Card>
+                   </Col>
+                 ))
+               }
+
+          </Row>
+
+
+        </Col> 
+        </Row>
+
+      </Container>
+
+          
+     </>
+  );
+
+
+
+
+  // return (
+  //   <div className="App">
+  //     <header className="App-header">
+  //       <div style={{display: 'flex', flexDirection: 'row'}}>
+
+  //         {/* column 1 */}
+  //         <img src={logo} className="App-logo" alt="logo" />
+
+  //         {/* column 2 */}
+  //         <div style={{flex:1}}>
+  //           <h1>Add Prayer</h1>
+
+  //             <input
+  //               onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
+  //               placeholder="Prayer"
+  //               value={createPrayerFormData.prayer}
+  //             /> <br/>
+  //             {/* <input
+  //               onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'description': e.target.value})}
+  //               placeholder="Description"
+  //               value={createPrayerFormData.description}
+  //             /> <br/> */}
+  //             <input
+  //               placeholder="Group"
+  //               value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
+  //               readOnly
+  //             /> <br/>
+  //             {/* <p>{createPrayerFormData.groupID}</p> */}
+  //             <Button onClick={() => createNewPrayer()}>Create Prayer</Button>
+              
+  //           </div>
+
+  //         {/* column 3 */}
+  //         <div style={{flex:1}}>
+  //             <h1>{currentUser}'s Prayers </h1>
+  //             <div style={{marginBottom: 30, padding: 5}}>
+  //               {
+  //                 prayers.map(prayer => (
+  //                   <div key={prayer.id || prayer.prayer} style={{ border: '4px dotted ' + returnIfExists(prayer.prayergroup, 'lightblue')}}>
+  //                     <p >{prayer.prayer}</p>
+  //                     <p className="smallText">by:{prayer.username}</p>
+  //                     <p className="smallText">in:{prayer.prayergroup}</p>
+
+  //                     {/* <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p> */}
+  //                     {/* <button onClick={() => deletePrayerByID(note)}>Delete note</button> */}
+  //                   </div>
+  //                 ))
+  //               }
+  //             </div>
+  //         </div>
+
+
+  //         {/* column 4 */}
+  //           <div style={{flex:1}}>
+  //             <h1>Groups</h1>
+  //             <button onClick={() => createNewGroup()}>Create New Group</button>
+  //             <button onClick={() => console.log(allGroups)}>printGroups</button>
+
+  //             <div style={{marginBottom: 30}}>
+  //               {
+  //                 allGroups.map(group => (
+  //                   <div key={group.id || group.name} style={{ border: '4px dotted ' + group.groupname}}>
+  //                     <h2>{group.groupname}</h2>
+  //                     <p className="smallText">PrayerCount: {getPrayerCountFromGroupID(group.id)}</p>
+  //                     <button onClick={() => {
+  //                           console.log('setactive button pressed');
+  //                           setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
+  //                         }}>set as Active</button>
+  //                   </div>
+  //                 ))
+  //               }
+  //             </div>
+  //           </div>
+  //       </div>
             
           
-      </header> 
-    </div>
-  );
+  //     </header> 
+  //   </div>
+  // );
+
+
 
 }
 
