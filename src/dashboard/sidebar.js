@@ -35,36 +35,8 @@ const Side = props => {
                         </Nav.Link>
                     </Nav.Item> 
                 </Card>
-             
 
-                <Card
-                    bg={'dark'} 
-                  //  style={{position: 'relative', bottom: 0}}
-                >
-                    <Card.Header>
-                        <Row>
-                            <Col > <Card.Title>Groups</Card.Title> </Col>
-                            <Col> <Button onClick={() => console.log("create New Group pressed")} style={{borderRadius: 25}}>+</Button> </Col>
-                        </Row>
-                    </Card.Header>
-                    <Card.Body>
-                    {
-                        allGroups.map(group => (
-                        <Row>
-                            <div style={{color: returnIfExists(group.groupname, 'lightblue'), fontSize:20}}>
-                                       <Button variant="dark" onClick={() => {
-                                            console.log('setactive button pressed');
-                                            // setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-                                        }}>                                        
-                                            {group.groupname} 
-                                        </Button>
-                            </div>
-
-                        </Row>
-                        ))
-                    }
-                    </Card.Body>
-                </Card>
+                {props.children}
                       
                       
             </Nav>

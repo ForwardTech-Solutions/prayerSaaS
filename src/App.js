@@ -5,8 +5,8 @@ import './App.css';
 
 //cognito authentication 
 import { withAuthenticator  } from 'aws-amplify-react'
-import { AmplifySignOut} from "@aws-amplify/ui-react";
-import Amplify, { Auth } from 'aws-amplify';
+//import { AmplifySignOut} from "@aws-amplify/ui-react";
+import Amplify, {Auth} from 'aws-amplify';
 import aws_exports from './aws-exports';
 
 
@@ -226,6 +226,15 @@ function App2() {
   }
 
 
+  async function signOutAWS() {
+    try {
+        await Auth.signOut();
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+}
+
+
 
 
   return (
@@ -235,7 +244,10 @@ function App2() {
         <img src={logo} className="App-logo" alt="logo" />
           PrayerSaaS
         </Navbar.Brand>
-        <AmplifySignOut buttonText="Custom Text"></AmplifySignOut>
+        <Navbar.Collapse className="justify-content-end">
+          <Button className="justify-content-end" style={{}} variant="warning" onClick={signOutAWS}>Sign out {currentUser}</Button>
+        </Navbar.Collapse>
+
       </Navbar>
 
       <Container 
@@ -246,7 +258,38 @@ function App2() {
 
           {/* Dashboard Sidebar */}
           <Col xs={2} id="sidebar-wrapper">      
-            <Sidebar />
+            <Sidebar >
+              
+            <Card
+                    bg={'dark'} 
+                  //  style={{position: 'relative', bottom: 0}}
+                >
+                    <Card.Header>
+                        <Row>
+                            <Col > <Card.Title>Groups</Card.Title> </Col>
+                            <Col> <Button onClick={() => createNewGroup()} style={{borderRadius: 25}}>+</Button> </Col>
+                        </Row>
+                    </Card.Header>
+                    <Card.Body>
+                    {
+                        allGroups.map(group => (
+                        <Row>
+                            <div style={{color: returnIfExists(group.groupname, 'lightblue'), fontSize:20}}>
+                                       <Button variant="dark" onClick={() => {
+                                            console.log('setactive button pressed');
+                                             setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
+                                        }}>                                        
+                                            {group.groupname} 
+                                        </Button>
+                            </div>
+
+                        </Row>
+                        ))
+                    }
+                    </Card.Body>
+                </Card>
+              
+            </Sidebar>
           </Col>
 
           {/* Rest of the Dashboard */}
