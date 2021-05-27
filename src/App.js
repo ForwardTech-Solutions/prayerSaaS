@@ -4,12 +4,13 @@ import logo from './logo.svg';
 import './App.css';
 
 //cognito authentication 
-import { withAuthenticator } from 'aws-amplify-react'
+import { withAuthenticator  } from 'aws-amplify-react'
+import { AmplifySignOut} from "@aws-amplify/ui-react";
 import Amplify, { Auth } from 'aws-amplify';
 import aws_exports from './aws-exports';
 
 
-import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
+import {Container, Row, Col, Button, Card, Navbar, InputGroup, FormControl, Form } from 'react-bootstrap'
 
 // import Button from 'react-bootstrap/Button'
 // import Container from 'react-bootstrap/Container'
@@ -20,6 +21,8 @@ import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./dashboard/sidebar.js";
 import "./dashboard/Dashboard.css"
+
+import PlusButton from './dashboard/plusButton.js'
 
 
 
@@ -152,7 +155,7 @@ function App2() {
       var putBody = JSON.stringify({
         "username": currentUser,
         "prayer": formToSend.prayer,
-        "prayergroup": formToSend.groupID ? getGroupNameFromID(formToSend.groupID) : null
+        "prayergroup": formToSend.groupID ? getGroupNameFromID(formToSend.groupID) : "noGroup(null)"
       });
 
       var requestOptions = {
@@ -228,8 +231,11 @@ function App2() {
   return (
     <>
       <Navbar bg="dark" variant="dark" className="navbar" fixed="top" >
-        <Navbar.Brand>PrayerSaaS</Navbar.Brand>
-        
+        <Navbar.Brand>
+        <img src={logo} className="App-logo" alt="logo" />
+          PrayerSaaS
+        </Navbar.Brand>
+        <AmplifySignOut buttonText="Custom Text"></AmplifySignOut>
       </Navbar>
 
       <Container 
@@ -237,124 +243,142 @@ function App2() {
         className="App-header"
       >
         <Row>
-            <Col xs={2} id="sidebar-wrapper">      
-              <Sidebar />
-            </Col>
-            <Col  xs={10} id="page-content-wrapper">
 
-        
-
-
-
-          <Row className="align-items-center">
-          <Col>
-            {/* column 1 */}
-            <img src={logo} className="App-logo" alt="logo" />
+          {/* Dashboard Sidebar */}
+          <Col xs={2} id="sidebar-wrapper">      
+            <Sidebar />
           </Col>
 
-
-          <Col >
-              {/* column 2 */}
-              <Card
-                bg={'dark'} 
-                style={{margin: 5}}
-              >
-                <Card.Body>
-                  <Card.Title>Add Prayer</Card.Title>
-                  <input
-                    onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
-                    placeholder="Prayer"
-                    value={createPrayerFormData.prayer}
-                  /> <br/>
-                  <input
-                    placeholder="Group"
-                    value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
-                    readOnly
-                  /> <br/>
-                  {/* <p>{createPrayerFormData.groupID}</p> */}
-                  <Button onClick={() => createNewPrayer()}>Create Prayer</Button>
-
-                </Card.Body>
-              </Card>
-      
-
-          </Col>
-
-        
-
-          <Col>
-
-          {/* column 4 */}
-              <Card
-                bg={'dark'} 
-                //style={{margin: 5}}
-              >
-                <Card.Body>
-                  <Card.Title>Groups</Card.Title>
-                  <Button onClick={() => createNewGroup()}>Create New Group</Button>
-                </Card.Body>
-              </Card>
+          {/* Rest of the Dashboard */}
+          <Col  xs={10} id="page-content-wrapper">
 
 
+            {/* Add Prayer short skinny bar */}
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+            <Card
+                    bg={'dark'} 
+                    style={{margin: 5}}
+                  >
+                    <Card.Body>
+                      {/* <Card.Title>Add Prayer</Card.Title>
+                      <input
+                        onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
+                        placeholder="Prayer"
+                        value={createPrayerFormData.prayer}
+                      /> <br/>
+                      <input
+                        placeholder="Group"
+                        value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
+                        readOnly
+                      /> <br/>
+                      <Button onClick={() => createNewPrayer()}>Create Prayer</Button> */}
 
-                {
-                  allGroups.map(group => (
-                  <Col>
-                    <Card
-                      bg={"dark"} 
-                      style={{ width: '18rem' }}
-                    >
-                      <Card.Header as="h5" style={{color: returnIfExists(group.groupname, 'lightblue')}}>
-                        <Row>
-                          <Col> {group.groupname} </Col>
-                          <Col> <Button onClick={() => {
-                            console.log('setactive button pressed');
-                            setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-                          }}>use</Button> </Col>
-                        </Row>
-                        </Card.Header>
-        
-                    </Card>
+                      <InputGroup>
+                        <FormControl
+                          // bg="primary"
+                          placeholder="Add a prayer..."
+                          aria-label="newPrayerContent"
+                          aria-describedby="basic-addon2"
+                          value={createPrayerFormData.prayer}
+                          onChange={e => setCreatePrayerFormData({prayer: e.target.value, groupID: createPrayerFormData.groupID})}
+                        />
+                        <InputGroup.Append>
+                          <Button 
+                            variant="outline-secondary"
+                            onClick={() => createNewPrayer()}
+                          >
+                          Create Prayer{createPrayerFormData.groupID != null ? " in " + getGroupNameFromID(createPrayerFormData.groupID) : ''}
+                          </Button>
+                        </InputGroup.Append>
+                      </InputGroup>
+                    </Card.Body>
+                  </Card>
                   </Col>
-                  ))
-                }
-          
-          </Col>
+            </Row>
 
-          </Row>
-          <Row> 
-          
-          {/* column 3 */}
-            <Col>
-              <h1>{currentUser}'s Prayers </h1>
-            </Col>
-
-               {
-                 prayers.map(prayer => (
-                  <Col>
-                    <Card
-                      bg={"dark"} 
-                      style={{ width: '18rem' }}
-                    >
-                      <Card.Header as="h5">{prayer.prayer}</Card.Header>
-
-                      <Card.Body style={{color: returnIfExists(prayer.prayergroup, 'lightblue')}}>
-                        <p className="smallText">by:{prayer.username}</p>
-                        <p className="smallText">in:{prayer.prayergroup}</p>
-                      </Card.Body>
-                    </Card>
-                   </Col>
-                 ))
-               }
-
-          </Row>
+            {/* Groups row TODO: move this elsewhere */}
+            {/* <Row className="align-items-center">
 
 
-        </Col> 
+            
+
+              <Col>
+
+                  <Card
+                    bg={'dark'} 
+                    //style={{margin: 5}}
+                  >
+                    <Card.Body>
+                      <Card.Title>Groups</Card.Title>
+                      <Button onClick={() => createNewGroup()}>Create New Group</Button>
+                    </Card.Body>
+                  </Card>
+
+
+
+                    {
+                      allGroups.map(group => (
+                      <Col>
+                        <Card
+                          bg={"dark"} 
+                          style={{ width: '18rem' }}
+                        >
+                          <Card.Header as="h5" style={{color: returnIfExists(group.groupname, 'lightblue')}}>
+                            <Row>
+                              <Col> {group.groupname} </Col>
+                              <Col> <Button onClick={() => {
+                                console.log('setactive button pressed');
+                                setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
+                              }}>use</Button> </Col>
+                            </Row>
+                            </Card.Header>
+            
+                        </Card>
+                      </Col>
+                      ))
+                    }
+              
+              </Col>
+
+            </Row> */}
+
+
+            {/* List of prayers */}
+            <Row> 
+              
+              {/* column 3 */}
+                <Col>
+                  <h1>{currentUser}'s Prayers </h1>
+                </Col>
+            </Row>
+            <Row>
+                  {
+                    prayers.map(prayer => (
+                        <Card
+                          bg={"dark"} 
+                          style={{ width: '18rem' }}
+                        >
+                          <Card.Header as="h5">{prayer.prayer}</Card.Header>
+
+                          <Card.Body style={{color: returnIfExists(prayer.prayergroup, 'lightblue')}}>
+                            <p className="smallText">by:{prayer.username}</p>
+                            <p className="smallText">in:{prayer.prayergroup}</p>
+                          </Card.Body>
+                        </Card>
+                    ))
+                  }
+
+            </Row>
+
+
+          </Col> 
         </Row>
 
-      </Container>
+ 
 
+
+      </Container>
           
      </>
   );
@@ -448,4 +472,4 @@ function App2() {
 
 
 
-export default withAuthenticator(App2, true);
+export default withAuthenticator(App2, false);

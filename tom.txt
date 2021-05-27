@@ -1,2 +1,7 @@
 prayer GETall GETone GETme PUT
 group GET PUT
+
+
+- move groups to bottom of sidebar
+- layout prayer cards like google keep
+- 'add prayer' as a button w/ popup 
