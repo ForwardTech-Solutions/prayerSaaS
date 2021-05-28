@@ -1,7 +1,20 @@
 prayer GETall GETone GETme PUT
 group GET PUT
 
+todo 5/27
+    - move groups to bottom of sidebar
+    - layout prayer cards like google keep
+    - 'add prayer' as a button w/ popup 
+    
+todo next
+    - refactor app into more disconnected components
+    
+    - research routing
+        - set up an individual page for prayers using rounting
 
-- move groups to bottom of sidebar
-- layout prayer cards like google keep
-- 'add prayer' as a button w/ popup 
+    - distinguish 'data for this user' from 'all data'
+        - API: get prayers by group 
+        - API: user object (prayers, groups)
+
+    - figure out what the benefit of this platform even is
+            
