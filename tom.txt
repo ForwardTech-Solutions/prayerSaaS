@@ -16,5 +16,10 @@ todo next
         - API: get prayers by group 
         - API: user object (prayers, groups)
 
+
+
+
+
+
+long term:
     - figure out what the benefit of this platform even is
-            

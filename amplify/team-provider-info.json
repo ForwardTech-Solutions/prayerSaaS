@@ -13,7 +13,12 @@
     },
     "categories": {
       "auth": {
-        "cognitocf0c6096": {}
+        "prayersaas801c55fe": {
+          "userPoolId": "us-east-1_m77Kzxs08",
+          "userPoolName": "dev2-prayerAPI-user-pool",
+          "webClientId": "3h7cl8in8rtekku4qjdairf6sl",
+          "nativeClientId": "47u1pgmb8a08e2ccggnnoav0g7"
+        }
       }
     }
   }

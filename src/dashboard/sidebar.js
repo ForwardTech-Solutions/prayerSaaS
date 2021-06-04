@@ -4,12 +4,7 @@ import './Dashboard.css'
 
 const Side = props => {
    
-    var allGroups = [
-        {groupname: 'TFBC Congregation'},
-        {groupname: 'Young Adults'},
-        {groupname: 'Worship Team'},
 
-    ]
     return (
         <>
 
@@ -31,13 +26,12 @@ const Side = props => {
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="disabled" disabled>
-                        Disabled
+                            Disabled
                         </Nav.Link>
                     </Nav.Item> 
                 </Card>
 
-                {props.children}
-                      
+                {props.children}                     
                       
             </Nav>
         </>

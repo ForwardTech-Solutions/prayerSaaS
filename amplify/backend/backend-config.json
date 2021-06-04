@@ -1,8 +1,11 @@
 {
   "auth": {
-    "cognitocf0c6096": {
+    "prayersaas801c55fe": {
       "service": "Cognito",
-      "providerPlugin": "awscloudformation"
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
     }
   },
   "api": {}

@@ -47,13 +47,20 @@ function App2() {
   const [createPrayerFormData, setCreatePrayerFormData] = useState(initialCreatePrayerFormState)
   const [currentUser, setCurrentUser] = useState('not-signed-in')
   const [allGroups, setAllGroups] = useState([])
-  
+  const [focusedGroupsPrayers, setFocusedGroupsPrayers] = useState([])
+  const [focusedGroup, setFocusedGroup] = useState()
+
 
   useEffect(() => {
    fetchMyPrayers();
    fetchAllGroups();
    updateAWSUser();
   }, [])
+
+
+  useEffect(() => {
+    fetchAGroupPrayers(focusedGroup)
+  }, [focusedGroup])
 
   async function updateAWSUser() {
     try{
@@ -67,7 +74,7 @@ function App2() {
 
 
   function makeid(length) {
-    var result           = '#';
+    var result           = '';
     var characters       = '0123456789ABCDEF';
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
@@ -115,6 +122,7 @@ function App2() {
       redirect: 'follow'
     };
     
+    
     fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/group", requestOptions)
       .then(response => response.text())
       .then(result => {
@@ -126,6 +134,41 @@ function App2() {
 
       
   }
+
+  async function fetchAGroupPrayers(_groupname) {
+
+        if(_groupname == "") {
+          setFocusedGroupsPrayers([])
+          return;
+        }
+          
+
+        var myHeaders = new Headers();
+        //myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
+
+
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow',
+          mode: "cors"
+
+        };
+
+        var _url = "https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/fromGroup/" + _groupname
+
+        await fetch(_url, requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            const parsed = JSON.parse(result)
+            setFocusedGroupsPrayers(parsed.prayers)
+            console.log(parsed)
+          })
+          .catch(error => console.log('error', error));
+  }
+
 
   async function createNewPrayer() {
 
@@ -185,9 +228,11 @@ function App2() {
     var randomGroup = {
       groupname: makeid(6),
     }
+        
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
 
         var raw = JSON.stringify({
           "groupname": randomGroup.groupname
@@ -225,6 +270,14 @@ function App2() {
       return backup
   }
 
+  function returnIfColor(first, backup) {
+    const theFirst = "" + first;
+    if (theFirst.length == 6)
+      return '#' + first
+    else 
+      return backup
+  }
+
 
   async function signOutAWS() {
     try {
@@ -232,7 +285,7 @@ function App2() {
     } catch (error) {
         console.log('error signing out: ', error);
     }
-}
+  }
 
 
 
@@ -274,10 +327,11 @@ function App2() {
                     {
                         allGroups.map(group => (
                         <Row>
-                            <div style={{color: returnIfExists(group.groupname, 'lightblue'), fontSize:20}}>
+                            <div style={{color: returnIfColor(group.groupname, 'lightblue'), fontSize:20}}>
                                        <Button variant="dark" onClick={() => {
                                             console.log('setactive button pressed');
                                              setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
+                                             setFocusedGroup(group.groupname)
                                         }}>                                        
                                             {group.groupname} 
                                         </Button>
@@ -304,18 +358,6 @@ function App2() {
                     style={{margin: 5}}
                   >
                     <Card.Body>
-                      {/* <Card.Title>Add Prayer</Card.Title>
-                      <input
-                        onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
-                        placeholder="Prayer"
-                        value={createPrayerFormData.prayer}
-                      /> <br/>
-                      <input
-                        placeholder="Group"
-                        value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
-                        readOnly
-                      /> <br/>
-                      <Button onClick={() => createNewPrayer()}>Create Prayer</Button> */}
 
                       <InputGroup>
                         <FormControl
@@ -339,54 +381,8 @@ function App2() {
                   </Card>
                   </Col>
             </Row>
-
-            {/* Groups row TODO: move this elsewhere */}
-            {/* <Row className="align-items-center">
-
-
             
-
-              <Col>
-
-                  <Card
-                    bg={'dark'} 
-                    //style={{margin: 5}}
-                  >
-                    <Card.Body>
-                      <Card.Title>Groups</Card.Title>
-                      <Button onClick={() => createNewGroup()}>Create New Group</Button>
-                    </Card.Body>
-                  </Card>
-
-
-
-                    {
-                      allGroups.map(group => (
-                      <Col>
-                        <Card
-                          bg={"dark"} 
-                          style={{ width: '18rem' }}
-                        >
-                          <Card.Header as="h5" style={{color: returnIfExists(group.groupname, 'lightblue')}}>
-                            <Row>
-                              <Col> {group.groupname} </Col>
-                              <Col> <Button onClick={() => {
-                                console.log('setactive button pressed');
-                                setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-                              }}>use</Button> </Col>
-                            </Row>
-                            </Card.Header>
             
-                        </Card>
-                      </Col>
-                      ))
-                    }
-              
-              </Col>
-
-            </Row> */}
-
-
             {/* List of prayers */}
             <Row> 
               
@@ -404,7 +400,7 @@ function App2() {
                         >
                           <Card.Header as="h5">{prayer.prayer}</Card.Header>
 
-                          <Card.Body style={{color: returnIfExists(prayer.prayergroup, 'lightblue')}}>
+                          <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
                             <p className="smallText">by:{prayer.username}</p>
                             <p className="smallText">in:{prayer.prayergroup}</p>
                           </Card.Body>
@@ -413,6 +409,37 @@ function App2() {
                   }
 
             </Row>
+
+          
+            {/* Focused Group */}
+          
+            <Row> 
+              
+              {/* column 3 */}
+                <Col>
+                  <h1>{focusedGroup ? focusedGroup + "'s prayers" : ""} </h1>
+                </Col>
+            </Row>
+            <Row>
+                  {
+                      focusedGroupsPrayers.map(prayer => (
+                        <Card
+                          bg={"dark"} 
+                          style={{ width: '18rem' }}
+                        >
+                          <Card.Header as="h5">{prayer.prayer}</Card.Header>
+
+                          <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
+                            <p className="smallText">by:{prayer.username}</p>
+                            <p className="smallText">in:{prayer.prayergroup}</p>
+                          </Card.Body>
+                        </Card>
+                    ))
+                  }
+
+            </Row>
+
+
 
 
           </Col> 
@@ -425,91 +452,6 @@ function App2() {
           
      </>
   );
-
-
-
-
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <div style={{display: 'flex', flexDirection: 'row'}}>
-
-  //         {/* column 1 */}
-  //         <img src={logo} className="App-logo" alt="logo" />
-
-  //         {/* column 2 */}
-  //         <div style={{flex:1}}>
-  //           <h1>Add Prayer</h1>
-
-  //             <input
-  //               onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'prayer': e.target.value})}
-  //               placeholder="Prayer"
-  //               value={createPrayerFormData.prayer}
-  //             /> <br/>
-  //             {/* <input
-  //               onChange={e => setCreatePrayerFormData({ ...createPrayerFormData, 'description': e.target.value})}
-  //               placeholder="Description"
-  //               value={createPrayerFormData.description}
-  //             /> <br/> */}
-  //             <input
-  //               placeholder="Group"
-  //               value={createPrayerFormData.groupID != null ? getGroupNameFromID(createPrayerFormData.groupID) : 'personal'}
-  //               readOnly
-  //             /> <br/>
-  //             {/* <p>{createPrayerFormData.groupID}</p> */}
-  //             <Button onClick={() => createNewPrayer()}>Create Prayer</Button>
-              
-  //           </div>
-
-  //         {/* column 3 */}
-  //         <div style={{flex:1}}>
-  //             <h1>{currentUser}'s Prayers </h1>
-  //             <div style={{marginBottom: 30, padding: 5}}>
-  //               {
-  //                 prayers.map(prayer => (
-  //                   <div key={prayer.id || prayer.prayer} style={{ border: '4px dotted ' + returnIfExists(prayer.prayergroup, 'lightblue')}}>
-  //                     <p >{prayer.prayer}</p>
-  //                     <p className="smallText">by:{prayer.username}</p>
-  //                     <p className="smallText">in:{prayer.prayergroup}</p>
-
-  //                     {/* <p className="smallText">{prayer.groupID? getGroupNameFromID(prayer.groupID) : "-personal-"}</p> */}
-  //                     {/* <button onClick={() => deletePrayerByID(note)}>Delete note</button> */}
-  //                   </div>
-  //                 ))
-  //               }
-  //             </div>
-  //         </div>
-
-
-  //         {/* column 4 */}
-  //           <div style={{flex:1}}>
-  //             <h1>Groups</h1>
-  //             <button onClick={() => createNewGroup()}>Create New Group</button>
-  //             <button onClick={() => console.log(allGroups)}>printGroups</button>
-
-  //             <div style={{marginBottom: 30}}>
-  //               {
-  //                 allGroups.map(group => (
-  //                   <div key={group.id || group.name} style={{ border: '4px dotted ' + group.groupname}}>
-  //                     <h2>{group.groupname}</h2>
-  //                     <p className="smallText">PrayerCount: {getPrayerCountFromGroupID(group.id)}</p>
-  //                     <button onClick={() => {
-  //                           console.log('setactive button pressed');
-  //                           setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-  //                         }}>set as Active</button>
-  //                   </div>
-  //                 ))
-  //               }
-  //             </div>
-  //           </div>
-  //       </div>
-            
-          
-  //     </header> 
-  //   </div>
-  // );
-
-
 
 }
 
