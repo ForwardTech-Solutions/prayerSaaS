@@ -45,7 +45,8 @@ const initialCreatePrayerFormState = {
 function App2() {
   const [prayers, setPrayers] = useState([])
   const [createPrayerFormData, setCreatePrayerFormData] = useState(initialCreatePrayerFormState)
-  const [currentUser, setCurrentUser] = useState('not-signed-in')
+  const [currentAWSUser, setCurrentAWSUser] = useState('not-signed-in')
+  const [currentUser, setCurrentUser] = useState()
   const [allGroups, setAllGroups] = useState([])
   const [focusedGroupsPrayers, setFocusedGroupsPrayers] = useState([])
   const [focusedGroup, setFocusedGroup] = useState()
@@ -62,11 +63,15 @@ function App2() {
     fetchAGroupPrayers(focusedGroup)
   }, [focusedGroup])
 
+  useEffect(() => {
+    fetchCurrentUserByCognito(currentAWSUser)
+  }, [currentAWSUser])
+
   async function updateAWSUser() {
     try{
       let user = await Auth.currentAuthenticatedUser();
       console.log(user.username)
-      setCurrentUser(user.username)
+      setCurrentAWSUser(user.username)
     } catch (err) {
       console.log ("error", err)
     }
@@ -135,6 +140,19 @@ function App2() {
       
   }
 
+  async function fetchCurrentUserByCognito(cognito_id) {
+    var _url = "https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/user/fromCognitoID/" + cognito_id
+
+    await fetch(_url)
+      .then(response => response.text())
+      .then(result => {
+        const parsed = JSON.parse(result)
+        setCurrentUser(parsed.user[0])
+        console.log("user just set: ", parsed)
+      })
+      .catch(error => console.log('error', error));
+  }
+
   async function fetchAGroupPrayers(_groupname) {
 
         if(_groupname == "") {
@@ -196,7 +214,7 @@ function App2() {
       //myHeaders.append("Access-Control-Allow-Origin", "*")
 
       var putBody = JSON.stringify({
-        "username": currentUser,
+        "username": currentAWSUser,
         "prayer": formToSend.prayer,
         "prayergroup": formToSend.groupID ? getGroupNameFromID(formToSend.groupID) : "noGroup(null)"
       });
@@ -298,7 +316,7 @@ function App2() {
           PrayerSaaS
         </Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
-          <Button className="justify-content-end" style={{}} variant="warning" onClick={signOutAWS}>Sign out {currentUser}</Button>
+          <Button className="justify-content-end" style={{}} variant="warning" onClick={signOutAWS}>Sign out {currentAWSUser}</Button>
         </Navbar.Collapse>
 
       </Navbar>
@@ -388,7 +406,7 @@ function App2() {
               
               {/* column 3 */}
                 <Col>
-                  <h1>{currentUser}'s Prayers </h1>
+                  <h1>{currentUser ? currentUser.username + "'s" : ""} Prayers </h1>
                 </Col>
             </Row>
             <Row>
@@ -409,6 +427,11 @@ function App2() {
                   }
 
             </Row>
+
+
+
+
+            
 
           
             {/* Focused Group */}
