@@ -6,7 +6,7 @@ todo 5/27
     - layout prayer cards like google keep
     - 'add prayer' as a button w/ popup 
     
-todo next
+todo 6/14 (and other dates before)
     - refactor app into more disconnected components
     
     - research routing
@@ -21,5 +21,16 @@ todo next
 
 
 
+todo next 
+    - refactor Dashboard into more components
+        - seperate add prayer button into its own thing
+        - seperate {user}'s prayers into its own thing
+    
+    - set up more routing  
+        - make myPrayers and individualPrayers replace the current area that add a prayer and {user}'s prayers occupy
+
+
+
 long term:
     - figure out what the benefit of this platform even is
+        - Update: been working on that.  it is a set of tools to empower churches to create active and powerful prayer cultures
