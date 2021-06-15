@@ -15,8 +15,9 @@ import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./sidebar.js";
-
-
+import AddPrayerButton from "../PrayerScreen/components/AddPrayerButton"
+import MyPrayerList from "../PrayerScreen/components/MyPrayerList"
+import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
 
 //initials
 const initialCreatePrayerFormState = {
@@ -140,7 +141,8 @@ function Dashboard() {
       .catch(error => console.log('error', error));
   }
 
-  async function fetchAGroupPrayers(_groupname) {
+  async function fetchAGroupPrayers(_group) {
+      var _groupname = _group ? _group.groupname : ""
 
         if(_groupname == "") {
           setFocusedGroupsPrayers([])
@@ -350,7 +352,7 @@ function Dashboard() {
                                         <Button variant="dark" onClick={() => {
                                                 console.log('setactive button pressed');
                                                 setCreatePrayerFormData({ ...createPrayerFormData, 'groupID': group.id})
-                                                setFocusedGroup(group.groupname)
+                                                setFocusedGroup(group)
                                             }}>                                        
                                                 {group.groupname} 
                                             </Button>
@@ -369,81 +371,19 @@ function Dashboard() {
           <Col  xs={10} id="page-content-wrapper">
 
 
-            {/* Add Prayer short skinny bar */}
-            <Row className="justify-content-md-center">
-              <Col md="auto">
-            <Card
-                    bg={'dark'} 
-                    style={{margin: 5}}
-                  >
-                    <Card.Body>
-
-                      <InputGroup>
-                        <FormControl
-                          // bg="primary"
-                          placeholder="Add a prayer..."
-                          aria-label="newPrayerContent"
-                          aria-describedby="basic-addon2"
-                          value={createPrayerFormData.prayer}
-                          onChange={e => setCreatePrayerFormData({prayer: e.target.value, groupID: createPrayerFormData.groupID})}
-                        />
-                        <InputGroup.Append>
-                          <Button 
-                            variant="outline-secondary"
-                            onClick={() => createNewPrayer()}
-                          >
-                          Create Prayer{createPrayerFormData.groupID != null ? " in " + getGroupNameFromID(createPrayerFormData.groupID) : ''}
-                          </Button>
-                        </InputGroup.Append>
-                      </InputGroup>
-                    </Card.Body>
-                  </Card>
-                  </Col>
-            </Row>
-            
-            
-            {/* List of prayers */}
-            <Row> 
-              
-              {/* column 3 */}
-                <Col>
-                  <h1>{currentUser ? currentUser.username + "'s" : ""} Prayers </h1>
-                </Col>
-            </Row>
-            <Row>
-                  {
-                    prayers.map(prayer => (
-                        <Card
-                          bg={"dark"} 
-                          style={{ width: '18rem' }}
-                        >
-                          <Card.Header as="h5">{prayer.prayer}</Card.Header>
-
-                          <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
-                            <p className="smallText">by:{prayer.username}</p>
-                            <p className="smallText">in:{prayer.prayergroup}</p>
-                          </Card.Body>
-                        </Card>
-                    ))
-                  }
-
-            </Row>
+          <MyPrayerScreen
+                AWSUser = {currentAWSUser}
+                Groups = {allGroups}
+                User = {currentUser}
+                _focusedGroup = {focusedGroup}
+          />
 
 
+          </Col> 
+        </Row>
 
 
-            
-
-          
-            {/* Focused Group */}
-          
-            <Row> 
-              
-              {/* column 3 */}
-                <Col>
-                  <h1>{focusedGroup ? focusedGroup + "'s prayers" : ""} </h1>
-                </Col>
-            </Row>
+          {/* 
             <Row>
                   {
                       focusedGroupsPrayers.map(prayer => (
@@ -461,14 +401,7 @@ function Dashboard() {
                     ))
                   }
 
-            </Row>
-
-
-
-
-          </Col> 
-        </Row>
-
+            </Row> */}
  
 
 

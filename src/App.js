@@ -16,7 +16,7 @@ import "./dashboard/Dashboard.css"
 import Dashboard from './dashboard/Dashboard';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import IndividualPrayerScreen from './PrayerScreen/IndividualPrayerScreen';
-import MyPrayerScreen from './PrayerScreen/MyPrayerScreen';
+import MyPrayerScreen from './PrayerScreen/components/MyPrayerList';
 
 
 

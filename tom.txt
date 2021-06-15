@@ -21,13 +21,23 @@ todo 6/14 (and other dates before)
 
 
 
-todo next 
+todo 6/15 
     - refactor Dashboard into more components
         - seperate add prayer button into its own thing
         - seperate {user}'s prayers into its own thing
     
-    - set up more routing  
+    - set up more routing    https://reactrouter.com/web/guides/quick-start 
         - make myPrayers and individualPrayers replace the current area that add a prayer and {user}'s prayers occupy
+
+
+
+todo next 
+    - move all API interaction to handler component
+
+
+
+bugs: 
+    - currentUser gets replaced with [](blank) sometimes
 
 
 
