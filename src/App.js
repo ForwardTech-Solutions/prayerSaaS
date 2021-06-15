@@ -15,8 +15,6 @@ import "./dashboard/Dashboard.css"
 //Body
 import Dashboard from './dashboard/Dashboard';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import IndividualPrayerScreen from './PrayerScreen/IndividualPrayerScreen';
-import MyPrayerScreen from './PrayerScreen/components/MyPrayerList';
 
 
 
@@ -27,21 +25,7 @@ Amplify.configure(aws_exports);
 
 function toRender() {
   return  <BrowserRouter>
-              <Switch>
-                
-                <Route path="/prayer/:id">
-                    <IndividualPrayerScreen/>
-                </Route>
-                
-                <Route path="/prayer">
-                    <MyPrayerScreen/>
-                </Route>
-                
-                <Route path="/">
-                    <Dashboard />
-                </Route>
-
-              </Switch>
+              <Dashboard />
           </BrowserRouter>    
 }
 

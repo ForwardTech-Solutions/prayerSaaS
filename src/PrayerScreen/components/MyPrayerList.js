@@ -1,6 +1,7 @@
 import React from "react";
 import {Card, Row, Col} from "react-bootstrap";
 import '../PrayerScreens.css'
+import { Link } from 'react-router-dom';
 
 const myPScreen = props => {
    
@@ -18,6 +19,8 @@ const myPScreen = props => {
           <Row>
                 {
                   props.prayersList.map(prayer => (
+                    <Link to={"/prayer/"+prayer.id} style={{ textDecoration: 'none', color:'white'}}>
+
                       <Card
                         bg={"dark"} 
                         style={{ width: '18rem' }}
@@ -29,6 +32,7 @@ const myPScreen = props => {
                           <p className="smallText">in:{prayer.prayergroup}</p>
                         </Card.Body>
                       </Card>
+                    </Link>
                   ))
                 }
 

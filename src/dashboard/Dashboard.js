@@ -19,6 +19,9 @@ import AddPrayerButton from "../PrayerScreen/components/AddPrayerButton"
 import MyPrayerList from "../PrayerScreen/components/MyPrayerList"
 import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
 
+import IndividualPrayerScreen from '../PrayerScreen/IndividualPrayerScreen';
+
+
 //initials
 const initialCreatePrayerFormState = {
   prayer: '',
@@ -26,6 +29,12 @@ const initialCreatePrayerFormState = {
   groupID: null,
 }
 
+const examplePrayer = {
+  "prayergroup": "F9DA28",
+  "prayer": "croisant",
+  "username": "d76a38ce-dc73-4733-8a08-e5ea038b03f1",
+  "id": "d34a91d0-ce05-11eb-b232-83b302e62eee"
+}
 
 
 
@@ -264,11 +273,7 @@ function Dashboard() {
     // setAllGroups([ ...allGroups, randomGroup ]);
   }
 
-  async function deletePrayerByID({ id }) {
-    const newNotesArray = prayers.filter(note => note.id !== id);
-    setPrayers(newNotesArray);
-    //await API.graphql({ query: deletePrayer, variables: { input: { id } }});
-  }
+
 
   function returnIfExists(first, backup) {
     if (first)
@@ -369,14 +374,27 @@ function Dashboard() {
 
           {/* Rest of the Dashboard */}
           <Col  xs={10} id="page-content-wrapper">
+              <Switch>
+
+                  <Route path="/prayer/:id" component={IndividualPrayerScreen}
+                          >
+                  </Route>
 
 
-          <MyPrayerScreen
-                AWSUser = {currentAWSUser}
-                Groups = {allGroups}
-                User = {currentUser}
-                _focusedGroup = {focusedGroup}
-          />
+
+
+
+                  <Route path="/">
+                      <MyPrayerScreen
+                          AWSUser = {currentAWSUser}
+                          Groups = {allGroups}
+                          User = {currentUser}
+                          _focusedGroup = {focusedGroup}
+                    />
+                  </Route>
+              </Switch>
+
+        
 
 
           </Col> 
