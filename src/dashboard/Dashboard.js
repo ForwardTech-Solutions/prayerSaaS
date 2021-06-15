@@ -7,18 +7,15 @@ import './Dashboard.css';
 import {Auth} from 'aws-amplify';
 
 
-import {Container, Row, Col, Button, Card, Navbar, InputGroup, FormControl } from 'react-bootstrap'
+import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
 
-import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
+import { Switch, Route, NavLink } from 'react-router-dom';
 
 
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./sidebar.js";
-import AddPrayerButton from "../PrayerScreen/components/AddPrayerButton"
-import MyPrayerList from "../PrayerScreen/components/MyPrayerList"
 import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
-
 import IndividualPrayerScreen from '../PrayerScreen/IndividualPrayerScreen';
 
 
@@ -50,7 +47,6 @@ function Dashboard() {
 
 
   useEffect(() => {
-   fetchMyPrayers();
    fetchAllGroups();
    updateAWSUser();
   }, [])
@@ -98,24 +94,6 @@ function Dashboard() {
     else return 'no result'
   }
 
-  async function fetchMyPrayers() {
-    console.log("here we go")
-        
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow',
-      mode: "cors"
-    };
-    
-    fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
-      .then(response => response.text())
-      .then(result => {
-        const parsed = JSON.parse(result)
-        setPrayers(parsed.prayers)
-        console.log(JSON.parse(result))})
-      .catch(error => console.log('error', error));
-  
-    }
 
 
   async function fetchAllGroups() {
@@ -186,59 +164,6 @@ function Dashboard() {
   }
 
 
-  async function createNewPrayer() {
-
-    //1. populate formToSend dynamically
-    var formToSend;
-      //a. if no prayer, stop
-      if (!createPrayerFormData.prayer) {
-        console.log('createPrayerStoppedEarly');
-        return;
-      }
-      //b. if no group, don't include group
-      else if (!createPrayerFormData.groupID) {
-        formToSend = {
-          prayer: createPrayerFormData.prayer,
-          //description: createPrayerFormData.description
-        }
-      }
-      //c. if group, just grab createPrayerFormData
-      else
-        formToSend = createPrayerFormData
-
-    //2. Do the actual API work
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      //myHeaders.append("Access-Control-Allow-Origin", "*")
-
-      var putBody = JSON.stringify({
-        "username": currentAWSUser,
-        "prayer": formToSend.prayer,
-        "prayergroup": formToSend.groupID ? getGroupNameFromID(formToSend.groupID) : "noGroup(null)"
-      });
-
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: putBody,
-        redirect: 'follow'
-      };
-
-      fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-          console.log(result)
-          fetchMyPrayers()
-        })
-        .catch(error => console.log('error', error));
-    
-
-
-    //await API.graphql({ query: createPrayer, variables: { input: formToSend } });
-    //3. Deal with local variables
-    setPrayers([ ...prayers, createPrayerFormData ]);
-    setCreatePrayerFormData(initialCreatePrayerFormState);
-  }
 
   async function createNewGroup() {
     var randomGroup = {
