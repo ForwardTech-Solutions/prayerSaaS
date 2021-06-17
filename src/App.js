@@ -24,7 +24,7 @@ Amplify.configure(aws_exports);
 
 function toRender() {
   
-  console.log("Your endpoint is at: ", process.env.REACT_APP_PRAYER_REST_ENDPOINT);
+  //console.log("Your endpoint is at: ", process.env.REACT_APP_PRAYER_REST_ENDPOINT);
 
   return  <BrowserRouter>
               <Dashboard />
