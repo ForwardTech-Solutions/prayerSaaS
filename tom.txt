@@ -33,7 +33,7 @@ todo 6/15
 
 todo next 
     - move all API interaction to handler component
-
+    
 
 
 bugs: 
@@ -42,5 +42,6 @@ bugs:
 
 
 long term:
+    - incoroporate testing
     - figure out what the benefit of this platform even is
         - Update: been working on that.  it is a set of tools to empower churches to create active and powerful prayer cultures
