@@ -94,7 +94,9 @@ function MyPrayerScreen(props) {
         redirect: 'follow'
       };
 
-      fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
+      console.log("sending POST request to: ", process.env.REACT_APP_PRAYER_REST_ENDPOINT)
+
+      fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT,"/prayer", requestOptions)
         .then(response => response.text())
         .then(result => {
           console.log(result)
