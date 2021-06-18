@@ -96,7 +96,7 @@ function MyPrayerScreen(props) {
 
       console.log("sending POST request to: ", process.env.REACT_APP_PRAYER_REST_ENDPOINT)
 
-      fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT,"/prayer", requestOptions)
+      fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer", requestOptions)
         .then(response => response.text())
         .then(result => {
           console.log(result)

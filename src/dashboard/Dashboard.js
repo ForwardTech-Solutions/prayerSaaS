@@ -250,17 +250,20 @@ function Dashboard() {
           <Col xs={2} id="sidebar-wrapper">      
             <Sidebar >
 
-                <Card bg='dark' style={{marginTop: 60, marginBottom: 30}}>
+                <Card bg='dark' style={{marginTop: 60, marginBottom: 30, paddingLeft: 10}}>
                         <NavLink to="/">
                             Home
                         </NavLink>
                         <NavLink to="/prayer">
-                            myPrayers
+                            MyPrayers
                         </NavLink>
-                        <NavLink to="/prayer/asdf">
-                            prayer: asdf
+                        <NavLink to="/prayer/079d0a30-ce06-11eb-b232-83b302e62eee">
+                            Prayer: muffin
                         </NavLink>
                      
+                        <NavLink to="/me">
+                            My Info
+                        </NavLink>
                         
                 </Card>
 
@@ -305,8 +308,17 @@ function Dashboard() {
                           >
                   </Route>
 
-
-
+                  
+                  <Route path="/me" >
+                    <>
+                        <h1>Here's what we know about you:</h1>
+                        <hr style={{color: "white", backgroundColor: "white"}}/>
+                        <h3>awsID: {currentAWSUser}</h3>
+                        <h3>pSaaS User: {currentUser ? "" : "null"}</h3>
+                        <h4>id: {currentUser ? currentUser.id : ""}</h4>
+                        <h4>username: {currentUser ? currentUser.username : ""}</h4>
+                    </>    
+                  </Route>
 
 
                   <Route path="/">
@@ -315,8 +327,12 @@ function Dashboard() {
                           Groups = {allGroups}
                           User = {currentUser}
                           _focusedGroup = {focusedGroup}
-                    />
+                      />
                   </Route>
+
+
+
+
               </Switch>
 
         
