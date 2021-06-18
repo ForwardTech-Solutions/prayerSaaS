@@ -32,7 +32,7 @@ todo 6/15
 
 
 todo next 
-    - move all API interaction to handler component
+    - move all API hardcodes to enviroment variables
     
 
 
