@@ -3,8 +3,8 @@ backend:
   phases:
     build:
       commands:
-        - amplifyPush
-
+        - chmod u+x ./myAmplifyPush.sh
+        - ./myAmplifyPush.sh
 frontend:
   phases:
     preBuild:
