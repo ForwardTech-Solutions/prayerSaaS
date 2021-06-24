@@ -17,6 +17,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./sidebar.js";
 import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
 import IndividualPrayerScreen from '../PrayerScreen/IndividualPrayerScreen';
+import GroupScreen from '../GroupScreen/GroupScreen';
 
 
 //initials
@@ -63,7 +64,7 @@ function Dashboard() {
   async function updateAWSUser() {
     try{
       let user = await Auth.currentAuthenticatedUser();
-      console.log(user.username)
+      console.log("setting AWS user to: ", user.username)
       setCurrentAWSUser(user.username)
     } catch (err) {
       console.log ("error", err)
@@ -81,18 +82,18 @@ function Dashboard() {
     return result;
  }
 
-  function getGroupNameFromID (group_id) {
-    if(!group_id) return 'invalidID'
-    var result = allGroups.find(({ id }) => id == group_id ).groupname
-    if(result != null) return result
-    else return 'no result'
-  }
-  function getPrayerCountFromGroupID (group_id) {
-    if(!group_id) return 'invalidID'
-    var result = prayers.filter(({groupID}) => groupID == group_id ).length
-    if(result != null) return result
-    else return 'no result'
-  }
+  // function getGroupNameFromID (group_id) {
+  //   if(!group_id) return 'invalidID'
+  //   var result = allGroups.find(({ id }) => id == group_id ).groupname
+  //   if(result != null) return result
+  //   else return 'no result'
+  // }
+  // function getPrayerCountFromGroupID (group_id) {
+  //   if(!group_id) return 'invalidID'
+  //   var result = prayers.filter(({groupID}) => groupID == group_id ).length
+  //   if(result != null) return result
+  //   else return 'no result'
+  // }
 
 
 
@@ -122,8 +123,12 @@ function Dashboard() {
       .then(response => response.text())
       .then(result => {
         const parsed = JSON.parse(result)
-        setCurrentUser(parsed.user[0])
-        console.log("user just set: ", parsed)
+        if(parsed.user[0] != null) {
+          setCurrentUser(parsed.user[0])
+          console.log("user just set: ", parsed)
+        }
+        else 
+          console.log("no user returned.  Not setting")
       })
       .catch(error => console.log('error', error));
   }
@@ -131,7 +136,7 @@ function Dashboard() {
   async function fetchAGroupPrayers(_group) {
       var _groupname = _group ? _group.groupname : ""
 
-        if(_groupname == "") {
+        if(_groupname === "") {
           setFocusedGroupsPrayers([])
           return;
         }
@@ -200,16 +205,11 @@ function Dashboard() {
 
 
 
-  function returnIfExists(first, backup) {
-    if (first)
-      return first
-    else 
-      return backup
-  }
+
 
   function returnIfColor(first, backup) {
     const theFirst = "" + first;
-    if (theFirst.length == 6)
+    if (theFirst.length === 6)
       return '#' + first
     else 
       return backup
@@ -231,7 +231,7 @@ function Dashboard() {
     <>
       <Navbar bg="dark" variant="dark" className="navbar" fixed="top" >
         <Navbar.Brand>
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" data-testid="PrayerSaaS_logo_image" />
           PrayerSaaS
         </Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
@@ -254,14 +254,14 @@ function Dashboard() {
                         <NavLink to="/">
                             Home
                         </NavLink>
-                        <NavLink to="/prayer">
+                        <NavLink to="/prayer" data-testid="MyPrayers_link">
                             MyPrayers
                         </NavLink>
                         <NavLink to="/prayer/079d0a30-ce06-11eb-b232-83b302e62eee">
                             Prayer: muffin
                         </NavLink>
                      
-                        <NavLink to="/me">
+                        <NavLink to="/me" data-testid="MyInfo_link">
                             My Info
                         </NavLink>
                         
@@ -279,8 +279,8 @@ function Dashboard() {
                         </Card.Header>
                         <Card.Body>
                         {
-                            allGroups.map(group => (
-                            <Row>
+                            allGroups.map((group, index) => (
+                            <Row key={"group_" + index}>
                                 <div style={{color: returnIfColor(group.groupname, 'lightblue'), fontSize:20}}>
                                         <Button variant="dark" onClick={() => {
                                                 console.log('setactive button pressed');
@@ -304,10 +304,11 @@ function Dashboard() {
           <Col  xs={10} id="page-content-wrapper">
               <Switch>
 
-                  <Route path="/prayer/:id" component={IndividualPrayerScreen}
-                          >
-                  </Route>
+                  <Route path="/prayer/:id" component={IndividualPrayerScreen} />
 
+
+                  <Route path="/group/:id" component={GroupScreen} />
+                  
                   
                   <Route path="/me" >
                     <>
@@ -372,3 +373,13 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+
+
+// function returnIfExists(first, backup) {
+//   if (first)
+//     return first
+//   else 
+//     return backup
+// }

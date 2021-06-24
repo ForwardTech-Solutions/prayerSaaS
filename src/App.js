@@ -1,10 +1,10 @@
 //default
-import React, { useEffect, useState } from 'react';
+import React  from 'react';
 import './App.css';
 
 //cognito authentication 
 import { withAuthenticator  } from 'aws-amplify-react'
-import Amplify, {Auth} from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import aws_exports from './aws-exports';
 
 //css styling
@@ -14,7 +14,7 @@ import "./dashboard/Dashboard.css"
 
 //Body
 import Dashboard from './dashboard/Dashboard';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 
 //after imports

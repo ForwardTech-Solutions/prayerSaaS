@@ -1,5 +1,5 @@
 import React from "react";
-import {Nav, Card, Button, Row, Col} from "react-bootstrap";
+import {Nav} from "react-bootstrap";
 import './Dashboard.css'
 
 const Side = props => {
@@ -23,12 +23,12 @@ const Side = props => {
         );
   };
 
-  function returnIfExists(first, backup) {
-    if (first)
-      return first
-    else 
-      return backup
-  }
+//   function returnIfExists(first, backup) {
+//     if (first)
+//       return first
+//     else 
+//       return backup
+//   }
 
   
   const Sidebar = Side;

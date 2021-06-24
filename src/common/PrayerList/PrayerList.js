@@ -1,25 +1,15 @@
 import React from "react";
 import {Card, Row, Col} from "react-bootstrap";
-import '../PrayerScreens.css'
 import { Link } from 'react-router-dom';
 
-const myPScreen = props => {
+const PList = props => {
    
     return (
-        <>
-
-          {/* List of prayers */}
-          <Row> 
-            
-            {/* column 3 */}
-              <Col>
-                <h1>{props._currentUser ? props._currentUser.username + "'s" : ""} Prayers </h1>
-              </Col>
-          </Row>
           <Row>
                 {
-                  props.prayersList.map(prayer => (
-                    <Link to={"/prayer/"+prayer.id} style={{ textDecoration: 'none', color:'white'}}>
+                  props.prayersList.map((prayer, index) => (
+                    <Link key={"prayer_" + index } data-testid="prayerCard"
+                    to={"/prayer/"+prayer.id} style={{ textDecoration: 'none', color:'white'}}>
 
                       <Card
                         bg={"dark"} 
@@ -36,15 +26,13 @@ const myPScreen = props => {
                   ))
                 }
 
-                </Row>
-
-        </>
+          </Row>
         );
   };
 
   function returnIfColor(first, backup) {
     const theFirst = "" + first;
-    if (theFirst.length == 6)
+    if (theFirst.length === 6)
       return '#' + first
     else 
       return backup
@@ -52,5 +40,5 @@ const myPScreen = props => {
 
 
   
-  const MyPrayerList = myPScreen;
-  export default MyPrayerList
+  const PrayerList = PList;
+  export default PrayerList

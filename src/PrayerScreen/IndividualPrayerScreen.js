@@ -7,32 +7,32 @@ function IndividualPrayerScreen(props) {
   const [prayer, setPrayer] = useState()
 
   useEffect(() => {
-      fetchMyPrayers(props.match.params.id);   
+      async function fetchMyPrayers(prayerID) {
+            
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+            mode: "cors"
+        };
+        
+        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/" + prayerID, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+            const parsed = JSON.parse(result)
+            setPrayer(parsed)
+            console.log("idividualFetch:" + JSON.parse(result))})
+            .catch(error => console.log('error', error));
+      
+      };
+      fetchMyPrayers(props.match.params.id);  
   }, []);
 
-  async function fetchMyPrayers(prayerID) {
-      console.log("here we go")
-          
-      var requestOptions = {
-          method: 'GET',
-          redirect: 'follow',
-          mode: "cors"
-      };
-      
-      fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/" + prayerID, requestOptions)
-          .then(response => response.text())
-          .then(result => {
-          const parsed = JSON.parse(result)
-          setPrayer(parsed)
-          console.log("idividualFetch:" + JSON.parse(result))})
-          .catch(error => console.log('error', error));
-    
-    }
+  
 
 
   function returnIfColor(first, backup) {
       const theFirst = "" + first;
-      if (theFirst.length == 6)
+      if (theFirst.length === 6)
         return '#' + first
       else 
         return backup
@@ -53,6 +53,7 @@ function IndividualPrayerScreen(props) {
                 <Card
                     bg={"dark"} 
                     style={{ width: '18rem' }}
+                    data-testid= "individual_prayer_card"
                   >
                     <Card.Header as="h5">{prayer.prayer}</Card.Header>
 

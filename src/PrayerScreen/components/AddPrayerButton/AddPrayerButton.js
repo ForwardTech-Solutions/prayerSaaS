@@ -19,11 +19,13 @@ const addButton = props => {
                         aria-describedby="basic-addon2"
                         value={props.InputValue}
                         onChange={props.onChangeFunction}
+                        data-testid="AddPrayerButton_input_field"
                     />
                     <InputGroup.Append>
                         <Button 
-                        variant="outline-secondary"
+                            variant="outline-secondary"
                             onClick={props.onClickFunction}
+                            data-testid="button"
                         >
                         Create Prayer {props.inGroupName}      
                         </Button>

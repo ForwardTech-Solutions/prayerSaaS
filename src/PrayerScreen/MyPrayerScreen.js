@@ -1,10 +1,9 @@
 import React,  { useEffect, useState } from "react";
-import {Container, Row, Col, Button, Card, Navbar, InputGroup, FormControl} from "react-bootstrap";
+import {Row, Col} from "react-bootstrap";
 import './PrayerScreens.css'
 
-import AddPrayerButton from "../PrayerScreen/components/AddPrayerButton"
-import MyPrayerList from "../PrayerScreen/components/MyPrayerList"
-
+import AddPrayerButton from "./components/AddPrayerButton/AddPrayerButton"
+import MyPrayerList from "../common/PrayerList/PrayerList"
 
 //info given: aws, groups
     // props:   AWSUser = {currentAWSUser}
@@ -18,7 +17,6 @@ const initialCreatePrayerFormState = {
     groupID: null,
   }
   
-
   
 function MyPrayerScreen(props) {
 
@@ -115,21 +113,11 @@ function MyPrayerScreen(props) {
 
 
 
-
-  function getGroupNameFromID (group_id) {
-    if(!group_id) return 'invalidID'
-    var result = props.Groups.find(({ id }) => id == group_id ).groupname
-    if(result != null) return result
-    else return 'no result'
-  }
-
-
-
     return (
         <>
             
-            {/* Add Prayer short skinny bar */}
-            <Row className="justify-content-md-center">
+          {/* Add Prayer short skinny bar */}
+          <Row className="justify-content-md-center">
               <Col md="auto">
                   <AddPrayerButton 
                     InputValue={createPrayerFormData.prayer}
@@ -139,10 +127,19 @@ function MyPrayerScreen(props) {
                   />
 
               </Col>
-            </Row>
+          </Row>
             
 
 
+
+          {/* My Prayers */}
+          <Row> 
+            
+            {/* List Title */}
+            <Col>
+                <h1 data-testid="myPrayerList_title">{props.User ? props.User.username + "'s" : ""} Prayers </h1>
+            </Col>
+          </Row>
 
           {/* List of prayers */}
             <MyPrayerList 
@@ -190,11 +187,11 @@ function MyPrayerScreen(props) {
 
 
   
-  function returnIfExists(first, backup) {
-    if (first)
-      return first
-    else 
-      return backup
-  }
+  // function returnIfExists(first, backup) {
+  //   if (first)
+  //     return first
+  //   else 
+  //     return backup
+  // }
 
   
