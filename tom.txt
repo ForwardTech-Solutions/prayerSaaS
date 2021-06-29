@@ -35,9 +35,21 @@ todo next
     - move all API hardcodes to enviroment variables
     
 
+test to write: 
+    -- List stuff
+        - create a List
+        - add prayers to a List
+        - bulk add prayers to a List
+        - view a list of lists
+        - edit the prayers on a List
+        - give a list a name
+
+
+
 
 bugs: 
     - currentUser gets replaced with [](blank) sometimes
+    - email response says "Successful" on any network reply
 
 
 

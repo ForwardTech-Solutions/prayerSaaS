@@ -5,6 +5,8 @@ import './Dashboard.css';
 
 //cognito authentication 
 import {Auth} from 'aws-amplify';
+import { withAuthenticator } from 'aws-amplify-react'
+
 
 
 import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
@@ -45,10 +47,12 @@ function Dashboard() {
   const [allGroups, setAllGroups] = useState([])
   const [focusedGroupsPrayers, setFocusedGroupsPrayers] = useState([])
   const [focusedGroup, setFocusedGroup] = useState()
+  const [lists, setlists] = useState([]);
 
 
   useEffect(() => {
    fetchAllGroups();
+   fetchAllLists();
    updateAWSUser();
   }, [])
 
@@ -206,6 +210,72 @@ function Dashboard() {
 
 
 
+  ///sends POST request to api
+  async function createNewList() {
+          
+        let _listName = prompt("Please enter a name for this List:", "Week of September 15h");
+        if (_listName == null || _listName === "") {
+          console.log("User cancelled the prompt");
+          return 0;
+        } 
+
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
+        var raw = JSON.stringify({
+          "listName": _listName,
+          "prayerIds": [
+              {"prayerId": "45d886c0-bd9f-11eb-8818-e36e4793f2a8"},   
+              {"prayerId": "8eb87db0-bd9e-11eb-8818-e36e4793f2a8"}
+          ],
+          "prayergroupId": "test_Group_1"
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/list", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            console.log(result)
+            fetchAllLists()
+          })
+          .catch(error => console.log('error', error));
+
+    //await API.graphql({ query: createGroup, variables: { input: randomGroup } }).then(() => {fetchAllGroups()})
+    // setAllGroups([ ...allGroups, randomGroup ]);
+  }
+
+
+
+  async function fetchAllLists() {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    
+    fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/list", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const parsed = JSON.parse(result)
+        console.log("allLists: "+ result)
+        setlists(parsed.lists)
+      })
+      .catch(error => console.log('fetchALlLists Error', error));
+
+      
+  }
+
+
+
+
 
   function returnIfColor(first, backup) {
     const theFirst = "" + first;
@@ -273,6 +343,32 @@ function Dashboard() {
                     >
                         <Card.Header>
                             <Row>
+                                <Col > <Card.Title>Lists</Card.Title> </Col>
+                                <Col> <Button onClick={() => createNewList()} style={{borderRadius: 25}}>+</Button> </Col>
+                            </Row>
+                        </Card.Header>
+                        <Card.Body>
+                        {
+                            lists.map((list, index) => (
+                            <Row key={"list_" + index}>
+                                <div >
+                                        <Button style={{color:'white', fontSize:15, textAlign: 'left'}} variant="dark" onClick={() => {
+                                            }}>                                        
+                                                {list.listName} 
+                                        </Button>
+                                </div>
+                            </Row>
+                            ))
+                        }
+                        </Card.Body>
+                </Card>
+
+                <Card
+                        bg={'dark'} 
+                    //  style={{position: 'relative', bottom: 0}}
+                    >
+                        <Card.Header>
+                            <Row>
                                 <Col > <Card.Title>Groups</Card.Title> </Col>
                                 <Col> <Button onClick={() => createNewGroup()} style={{borderRadius: 25}}>+</Button> </Col>
                             </Row>
@@ -296,6 +392,9 @@ function Dashboard() {
                         }
                         </Card.Body>
                 </Card>
+
+
+             
               
             </Sidebar>
           </Col>
@@ -372,7 +471,7 @@ function Dashboard() {
 
 }
 
-export default Dashboard;
+export default withAuthenticator(Dashboard, false);
 
 
 
