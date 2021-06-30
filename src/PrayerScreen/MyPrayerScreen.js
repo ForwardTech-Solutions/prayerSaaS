@@ -47,7 +47,7 @@ function MyPrayerScreen(props) {
             console.log(JSON.parse(result))})
             .catch(error => console.log('error', error));
         
-        }
+    }
 
 
     

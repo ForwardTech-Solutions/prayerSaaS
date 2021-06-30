@@ -20,6 +20,7 @@ import Sidebar from "./sidebar.js";
 import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
 import IndividualPrayerScreen from '../PrayerScreen/IndividualPrayerScreen';
 import GroupScreen from '../GroupScreen/GroupScreen';
+import IndividualListScreen from '../ListScreen/IndividualListScreen';
 
 
 //initials
@@ -352,10 +353,13 @@ function Dashboard() {
                             lists.map((list, index) => (
                             <Row key={"list_" + index}>
                                 <div >
+                                  <NavLink to={"/list/"+list.id} data-testid="MyInfo_link">
                                         <Button style={{color:'white', fontSize:15, textAlign: 'left'}} variant="dark" onClick={() => {
                                             }}>                                        
                                                 {list.listName} 
                                         </Button>
+                                  </NavLink>
+
                                 </div>
                             </Row>
                             ))
@@ -407,8 +411,11 @@ function Dashboard() {
 
 
                   <Route path="/group/:id" component={GroupScreen} />
-                  
-                  
+
+
+                  <Route path="/list/:id" component={IndividualListScreen} />
+  
+
                   <Route path="/me" >
                     <>
                         <h1>Here's what we know about you:</h1>
