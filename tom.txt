@@ -36,13 +36,7 @@ todo next
     
 
 test to write: 
-    -- List stuff
-        z- create a List
-        - add prayers to a List
-        - bulk add prayers to a List
-        z- view a list of lists
-        - edit the prayers on a List
-        - give a list a name
+
 
 
 
@@ -50,6 +44,8 @@ test to write:
 bugs: 
     - currentUser gets replaced with [](blank) sometimes
     - email response says "Successful" on any network reply
+    - clicking on one list link (on the sidebar) and then a different one does not change the screen, only the URL
+    - you can have duplicates prayers in a list and can do so by adding them to a list 
 
 
 

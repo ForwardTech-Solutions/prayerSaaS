@@ -228,8 +228,6 @@ function Dashboard() {
         var raw = JSON.stringify({
           "listName": _listName,
           "prayerIds": [
-              {"prayerId": "45d886c0-bd9f-11eb-8818-e36e4793f2a8"},   
-              {"prayerId": "8eb87db0-bd9e-11eb-8818-e36e4793f2a8"}
           ],
           "prayergroupId": "test_Group_1"
         });
@@ -256,8 +254,15 @@ function Dashboard() {
 
 
   async function fetchAllLists() {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
+
     var requestOptions = {
       method: 'GET',
+      headers: myHeaders,
       redirect: 'follow'
     };
     
@@ -345,7 +350,7 @@ function Dashboard() {
                         <Card.Header>
                             <Row>
                                 <Col > <Card.Title>Lists</Card.Title> </Col>
-                                <Col> <Button onClick={() => createNewList()} style={{borderRadius: 25}}>+</Button> </Col>
+                                <Col> <Button onClick={() => createNewList()} style={{borderRadius: 25}} data-testid="List_newListButton">+</Button> </Col>
                             </Row>
                         </Card.Header>
                         <Card.Body>

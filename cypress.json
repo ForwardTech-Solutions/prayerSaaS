@@ -4,5 +4,7 @@
     "env": {
         "Cognito_Username": "supertom500@icloud.com",
         "Cogntio_Password": "Icloudpass1!"
-    }
+    },
+    "viewportWidth": 1280,
+    "viewportHeight": 720
 }
