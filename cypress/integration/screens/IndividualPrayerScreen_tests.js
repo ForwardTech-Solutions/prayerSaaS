@@ -33,6 +33,9 @@ describe("IndividualPrayerScreen Tests", function () {
         cy.get('[data-testid="individual_prayer_card"]')
     })
 
+
+    
+
     
     // it('contains the AddPrayerButton component', () => {
     //     cy.contains("Create Prayer")

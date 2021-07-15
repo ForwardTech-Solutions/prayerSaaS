@@ -1,10 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {Card, Button} from "react-bootstrap";
+import {Auth} from 'aws-amplify';
 import './PrayerScreens.css'
+
+import {useHistory} from 'react-router-dom';
+
 
 function IndividualPrayerScreen(props) {
    
   const [prayer, setPrayer] = useState()
+  const history = useHistory(); 
+
 
   useEffect(() => {
       async function fetchMyPrayers(prayerID) {
@@ -30,6 +36,34 @@ function IndividualPrayerScreen(props) {
   
 
 
+
+  async function handleDeletePrayer( _id) {
+    console.log("deleting:", _id)
+          
+    //delete the list
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
+
+    var requestOptions = {
+      headers: myHeaders,
+      method: 'delete',
+      redirect: 'follow'
+    };
+
+    fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer/" + _id, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        console.log('deleteResults: '+ result)    
+        history.push('/') 
+        history.go(0)
+      })
+      .catch(error => console.log('delete Error', error));
+    
+}
+
+
   function returnIfColor(first, backup) {
       const theFirst = "" + first;
       if (theFirst.length === 6)
@@ -38,10 +72,6 @@ function IndividualPrayerScreen(props) {
         return backup
   }
 
-  async function deletePrayerByID( id ) {
-      console.log("delete code not written, but it should delete prayer: ", id)
-      //await API.graphql({ query: deletePrayer, variables: { input: { id } }});
-  }
 
   return (
     <>
@@ -64,7 +94,7 @@ function IndividualPrayerScreen(props) {
                 </Card>    
                       
             
-                <Button style={{marginTop: 50}} variant="danger" onClick={() => {deletePrayerByID(prayer.id)}}>Delete this prayer: {prayer.prayer}</Button>
+                <Button style={{marginTop: 50}} variant="outline-danger" onClick={() => {handleDeletePrayer(prayer.id)}}>Delete this prayer: {prayer.prayer}</Button>
 
             </> 
             : <></>
