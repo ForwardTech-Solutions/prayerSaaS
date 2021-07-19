@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 /// <reference types="Cypress" />
 
+import "../../support/auth-provider-commands/cognito"
+
 
 describe("GroupAcceptPrayerScreen Tests", function () {
 
@@ -78,5 +80,94 @@ describe("GroupAcceptPrayerScreen Tests", function () {
             
     })
     
+
+    /// <summary>
+    /// Test assumes there is a group with id 63adf880-bd93-11eb-a02b-dd913b116243 that accepts prayer requests
+    /// Test assumes there is a group with id b4df2f00-bf26-11eb-81da-2b6b2a640c68 that does NOT accept prayer requests
+    /// </summary>
+    it('validates that the group link is valid', () => {
+            
+        cy.visit('/GroupAcceptPrayerScreen/63adf880-bd93-11eb-a02b-dd913b116243')
+            cy.contains("Submit")                              //sign up button
+
+        cy.visit('/GroupAcceptPrayerScreen/b4df2f00-bf26-11eb-81da-2b6b2a640c68')
+            cy.contains("not accepting prayer")
+
+        cy.visit('/GroupAcceptPrayerScreen/invalidName')
+            cy.contains("does not exist")
+
+            
+    })
+
+
+
+    it('proves that leaving the name field blank results in fullName being "Anonymous"', () => {
+            
+        var prayerBody = "TestPrayer" + Math.floor(Math.random() * 1000)
+
+        //enter in the prayer without a name (unauthorized)
+        cy.visit('/GroupAcceptPrayerScreen/63adf880-bd93-11eb-a02b-dd913b116243')          
+
+            cy.get('[id="PrayerScreen_prayer_form"]')    //form
+                .type(prayerBody)
+
+            cy.contains("Submit")                              //sign up button
+                .click()
+
+
+        cy.loginByCognitoApi(
+            Cypress.env('Cognito_Username'),
+            Cypress.env('Cogntio_Password')
+        )
+
+        //visit home authorized, and click on the prayer
+        cy.visit('/')
+            cy.contains(prayerBody)
+                .click()
+
+        //should contain "Anonymous"
+        cy.contains("Anonymous")
+
+        cy.contains('Delete')
+            .click()
+
+    })
+
+
+    it('proves that system works with a name included', () => {
+            
+        var prayerBody = "TestPrayer" + Math.floor(Math.random() * 1000)
+
+        //enter in the prayer without a name (unauthorized)
+        cy.visit('/GroupAcceptPrayerScreen/63adf880-bd93-11eb-a02b-dd913b116243')          
+
+            cy.get('[id="PrayerScreen_prayer_form"]')    //form
+                .type(prayerBody)
+
+            cy.get('[id="PrayerScreen_name_form"]')    //form
+                .type('testName')
+
+            cy.contains("Submit")                              //sign up button
+                .click()
+
+
+        cy.loginByCognitoApi(
+            Cypress.env('Cognito_Username'),
+            Cypress.env('Cogntio_Password')
+        )
+
+        //visit home authorized, and click on the prayer
+        cy.visit('/')
+            cy.contains(prayerBody)
+                .click()
+
+        //should contain "Anonymous"
+        cy.contains("testName")
+        cy.contains(prayerBody)
+
+        cy.contains('Delete')
+            .click()
+
+    })
     
 })

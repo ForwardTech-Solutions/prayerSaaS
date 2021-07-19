@@ -60,13 +60,6 @@ todo other
 
 
 test to write: 
-    - addPrayerTo/groups
-        - displays info
-        - catches bad words
-        - error when group doesn't accept
-        - blank name yeilds anonymous
-        - successfully adds prayer to valid group unauthorized
-
 
 
 
