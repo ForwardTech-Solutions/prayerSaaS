@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Row, Col} from "react-bootstrap";
+import {Card, Row} from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 const PList = props => {
@@ -20,6 +20,8 @@ const PList = props => {
                         <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
                           <p className="smallText">by:{prayer.username}</p>
                           <p className="smallText">in:{prayer.prayergroup}</p>
+                          <p className="smallText">from:{prayer.source ? prayer.source : ""}</p>
+
                         </Card.Body>
                       </Card>
                     </Link>

@@ -21,7 +21,7 @@ function IndividualPrayerScreen(props) {
             mode: "cors"
         };
         
-        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/" + prayerID, requestOptions)
+        fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer/" + prayerID, requestOptions)
             .then(response => response.text())
             .then(result => {
             const parsed = JSON.parse(result)

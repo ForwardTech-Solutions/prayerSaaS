@@ -14,7 +14,7 @@ import MyPrayerList from "../common/PrayerList/PrayerList"
 const initialCreatePrayerFormState = {
     prayer: '',
     //description: '',
-    groupID: null,
+    groupname: null,
   }
   
   
@@ -39,12 +39,14 @@ function MyPrayerScreen(props) {
             mode: "cors"
         };
         
-        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer", requestOptions)
+        fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer/", requestOptions)
             .then(response => response.text())
             .then(result => {
-            const parsed = JSON.parse(result)
-            setPrayers(parsed.prayers)
-            console.log(JSON.parse(result))})
+              const parsed = JSON.parse(result)
+              setPrayers(parsed.prayers)
+              console.log("MyPrayerScreen GET /prayer result: ")
+              console.log(parsed.prayers)
+            })
             .catch(error => console.log('error', error));
         
     }
@@ -70,7 +72,7 @@ function MyPrayerScreen(props) {
       //c. if group, just grab createPrayerFormData
       else {
         formToSend = createPrayerFormData
-        formToSend = {...formToSend, 'groupID': props._focusedGroup.groupname}
+        formToSend = {...formToSend, 'groupname': props._focusedGroup.groupname, 'groupid': props._focusedGroup.id}
       }
         
 
@@ -82,7 +84,9 @@ function MyPrayerScreen(props) {
       var putBody = JSON.stringify({
         "username": props.AWSUser,
         "prayer": formToSend.prayer,
-        "prayergroup": formToSend.groupID ? formToSend.groupID : "noGroup(null)"
+        "prayergroup": formToSend.groupname ? formToSend.groupname : "noGroup(null)",
+        "prayerGroupId": formToSend.groupid ? formToSend.groupid : "",
+        "source": "MyPrayerScreen",
       });
 
       var requestOptions = {
@@ -121,7 +125,7 @@ function MyPrayerScreen(props) {
               <Col md="auto">
                   <AddPrayerButton 
                     InputValue={createPrayerFormData.prayer}
-                    onChangeFunction={e => setCreatePrayerFormData({prayer: e.target.value, groupID: createPrayerFormData.groupID})}
+                    onChangeFunction={e => setCreatePrayerFormData({prayer: e.target.value, groupname: createPrayerFormData.groupname})}
                     onClickFunction={createNewPrayer}
                     inGroupName =  {props._focusedGroup != null ? " in " + props._focusedGroup.groupname : ''}
                   />
@@ -158,7 +162,7 @@ function MyPrayerScreen(props) {
           
             <Row> 
                 <Col>
-                  <h1>{props._focusedGroup ? props._focusedGroup.groupname : ''} </h1>
+                  <h1>{props._focusedGroup ? props._focusedGroup.groupname + " | " + props._focusedGroup.id : ''} </h1>
                 </Col>
             </Row>
         

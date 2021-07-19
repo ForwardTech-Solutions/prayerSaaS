@@ -16,6 +16,7 @@ import "./dashboard/Dashboard.css"
 import Dashboard from './dashboard/Dashboard';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import EmailSignupScreen from './emailFlow/emailSignup'
+import GroupAcceptPrayerScreen from './GroupScreen/Group_AcceptPrayersScreen'
 
 
 //after imports
@@ -30,6 +31,7 @@ function toRender() {
             <Switch>
               <Route exact path="/email-signup" component={EmailSignupScreen}/>
               <Route exact path="/email-unsubscribe" component={EmailSignupScreen}/>
+              <Route exact path="/GroupAcceptPrayerScreen/:id" component={GroupAcceptPrayerScreen}/>
               <Route path="/">
                   <Dashboard/>
               </Route>

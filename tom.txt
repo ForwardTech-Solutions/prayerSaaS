@@ -40,16 +40,31 @@ todo now
         - create a microservice that lets you create QR codes and choose what to link them to and change what they link to
             -   have a dynamo table of key/destination pairs where key is the URL generated for the QR (and the value of the code)
                 and the destination is where you are redirected todo
+        
         - create static URL pages that can un-authorized accept prayers to a specific destination.  Make this url the destination of ^
             - something like /addPrayerTo/group/:id
-            - might have to create a new API endpoint that can unauthorized check if a group accpets unauthorized requests
+                - only load page successfully if :id is valid
+            - create a new API endpoint that can unauthorized check if a group accpets unauthorized requests
+                - i need to refactor all of prayer to have fields like 
+                    - source
+                    - prayerGroupID
+                    - fullName
+                - prayergroups need fields
+                    - accepts_unauthorized_requests
+            - captcha
+
 
 todo other 
     - move all API hardcodes to enviroment variables
 
 
 test to write: 
-
+    - addPrayerTo/groups
+        - displays info
+        - catches bad words
+        - error when group doesn't accept
+        - blank name yeilds anonymous
+        - successfully adds prayer to valid group unauthorized
 
 
 

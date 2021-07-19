@@ -27,7 +27,7 @@ describe("Create a prayer from dashboard, load it, and delete it", function () {
 
     it('loads the prayer and delete the prayer', () => {
         
-        cy.pause()
+        // cy.pause()
         //finds and loads the prayer
         cy.contains(prayerName)
             .click()

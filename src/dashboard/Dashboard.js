@@ -161,7 +161,7 @@ function Dashboard() {
 
         };
 
-        var _url = "https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/fromGroup/" + _groupname
+        var _url = process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer/fromGroup/" + _groupname
 
         await fetch(_url, requestOptions)
           .then(response => response.text())
