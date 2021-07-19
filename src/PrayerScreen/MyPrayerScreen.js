@@ -2,6 +2,8 @@ import React,  { useEffect, useState } from "react";
 import {Row, Col} from "react-bootstrap";
 import './PrayerScreens.css'
 
+import {Auth} from 'aws-amplify';
+
 import AddPrayerButton from "./components/AddPrayerButton/AddPrayerButton"
 import MyPrayerList from "../common/PrayerList/PrayerList"
 
@@ -79,7 +81,8 @@ function MyPrayerScreen(props) {
     //2. Do the actual API work
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      //myHeaders.append("Access-Control-Allow-Origin", "*")
+      myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
 
       var putBody = JSON.stringify({
         "username": props.AWSUser,

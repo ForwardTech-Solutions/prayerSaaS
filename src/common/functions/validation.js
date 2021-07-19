@@ -8,39 +8,67 @@
   export function checkForBadWords(text) {
 
     //check email for bad words
-    var badWords = [  "fuck",
+    var badStrings = [  "fuck",
+                      "fucking",
+                      "fucked",
                       "shit",
-                      "ass",
+                      "shitty",
+                      "shitting",
                       "fag",
                       "nigger",
                       "nigga",
                       "piss",
+                      "pissed",
                       "pussy",
-                      "porn",
-                      "cum",
+                      //"porn",
                       "dick",
+                      "dicked",
                       "penis",
                       "vagina",
                       "cunt",
                       "slut",
+                      "slutty",
                       "whore",
                       "bitch",
+                      "bitches",
                       "dumbass",
-                      "idiot",
+                      //"idiot",
                       "bastard",
                       "douche",
-                      "suck",
-                      "faggot"
+                      //"suck",
+                      "faggot",
                     ];
 
+    
+      var badWords = [
+        "ass",
+        "cum",
+        "cumming",
+        "cock",
+      ]
 
 
-      //check if the text contains any of the bad words
-    for (var i = 0; i < badWords.length; i++) {
-      if (text.indexOf(badWords[i]) > -1) {
+
+
+
+    //check if the text contains any of the bad strings
+    for (var i = 0; i < badStrings.length; i++) {
+      if (text.indexOf(badStrings[i]) > -1) {
         return true
       }
     }
+
+    //check if the text contains any of the bad words as whole words
+    for (var i = 0; i < badWords.length; i++) {
+      if (text.indexOf(" " + badStrings[i] + " ") > -1) {
+        return true
+      }
+    }
+  
+
+
+
+
     return false
     
   }

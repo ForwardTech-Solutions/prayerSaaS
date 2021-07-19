@@ -26,7 +26,7 @@ function IndividualPrayerScreen(props) {
             .then(result => {
             const parsed = JSON.parse(result)
             setPrayer(parsed)
-            console.log("idividualFetch:" + JSON.parse(result))})
+            console.log("individualFetch:" + result)})
             .catch(error => console.log('error', error));
       
       };

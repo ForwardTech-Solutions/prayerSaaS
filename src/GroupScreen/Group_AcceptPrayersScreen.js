@@ -16,9 +16,51 @@ function GroupAcceptPrayerScreen(props) {
   const [response, setResponse] = useState()
   const [isLoading, setisLoading] = useState()
 
-  useEffect(() => {
+  const [validGroup, setValidGroup] = useState("loading") //values: doesNotExist, valid, notAccepting, or loading 
 
-  }, []);
+  
+  useEffect(() => {
+        
+    async function fetchMyGroupAcceptingPrayers(groupID) {
+
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+            mode: "cors"
+        };
+        
+        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/group/accepts_unathorized_prayers/" + groupID, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+              //if group does not exist, result will contain "group does not exist"
+              if (result.indexOf("group does not exist") !== -1) {
+                setValidGroup('doesNotExist')
+                console.log("group does not exist")
+                
+              }
+              //result will be "true" or "false" (the strings, not the boolean).  true means the group is accepting prayers, false means it is not.
+              else if(result !== "true") {
+                setValidGroup('notAccepting')
+                console.log("group is not accepting prayers")
+                
+              }
+              else {
+                setValidGroup('valid')
+                console.log("group exists and is accepting prayers")
+                
+              }
+              console.log(result)
+            })
+            .catch(error => {
+              console.log('error', error)
+            });
+    }
+
+    fetchMyGroupAcceptingPrayers(props.match.params.id)
+
+
+
+}, []);
 
 
   function returnIfColor(first, backup) {
@@ -41,6 +83,7 @@ function GroupAcceptPrayerScreen(props) {
     //if the user has entered a bad word, we need to show them a message
     if(result) {
       setResponse("You have entered a bad word. Please edit your prayer.")
+      console.log("bad word entered")
       setisLoading(false)
     }
     else {
@@ -52,7 +95,7 @@ function GroupAcceptPrayerScreen(props) {
             var jayson = JSON.stringify({
                 "prayer" : prayer,
                 "username": "",
-                "fullName": fullName,
+                "fullName": (fullName === "" || fullName == null) ? "Anonymous" : fullName,
                 "prayerGroupId": props.match.params.id,
                 "source" : "addPrayerTo/" + props.match.params.id
             })
@@ -100,58 +143,86 @@ function GroupAcceptPrayerScreen(props) {
 
 
   return (
+
     <>
      <Container
         fluid
         className="App-header"
       >
-        <Row>
+        {validGroup === "loading" ? <h3>Loading...</h3> : 
+          <Row>
 
-        <Card
-            bg={"dark"}
-            style={{ width: '54rem' , height: '30rem', padding: '20px'}}
-            data-testid= "prayer_accept_card"
-        >
-            <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
-
-            <Card.Title as="h1" data-testid="PrayerAccept_title" style={{textAlign: 'center'}}>How can we pray for you?</Card.Title>
-
-
-            <Card.Subtitle as="h4"  style={{textAlign: 'center'}}>Please enter your prayer below.  Our prayer team and staff each meet weekly to pray for your requests</Card.Subtitle>
-
-            <br/>            
             
-            <Form.Label>Name</Form.Label>
+            {validGroup === 'valid' ? 
+                <Card
+                    bg={"dark"}
+                    style={{ width: '54rem' , height: '30rem', padding: '20px'}}
+                    data-testid= "prayer_accept_card"
+                >
+                    <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
 
-            <Form.Control size="lg" type="string" id="PrayerScreen_name_form" placeholder="John Doe (leave blank to remain Anonymous)" onChange={e => {setFullName(e.target.value)}} />
-
-
-            <Form.Label>Prayer</Form.Label>
-
-            <InputGroup>
-
-                <Form.Control size="lg" type="string" id="PrayerScreen_prayer_form" placeholder="for God's will to be done in..." onChange={e => {setPrayer(e.target.value)}} />
-
-                <InputGroup.Append >
-                        <Button
-                            variant="outline-secondary"
-                            size = 'lg'
-                            disabled={isLoading}
-                            onClick={!isLoading ? handleClick : null}
-                        >
-                            {isLoading ? 'Loading…' : 'Submit'}
-                        </Button>
-                </InputGroup.Append>
-            </InputGroup>
-        
-            <p style={response === "Successfully Submitted!" ? {color: 'green', fontSize: '16px'} : {color: 'red', fontSize: '16px'}}>{response}</p>
+                    <Card.Title as="h1" data-testid="PrayerAccept_title" style={{textAlign: 'center'}}>How can we pray for you?</Card.Title>
 
 
-            </Card.Body>
+                    <Card.Subtitle as="h4"  style={{textAlign: 'center'}}>Please enter your prayer below.  Our prayer team and staff each meet weekly to pray for your requests</Card.Subtitle>
 
-        </Card>
+                    <br/>            
+                    
+                    <Form.Label>Name</Form.Label>
 
-        </Row>
+                    <Form.Control size="lg" type="string" id="PrayerScreen_name_form" placeholder="John Doe (leave blank to remain Anonymous)" onChange={e => {setFullName(e.target.value)}} />
+
+
+                    <Form.Label>Prayer</Form.Label>
+
+                    <InputGroup>
+
+                        <Form.Control size="lg" type="string" id="PrayerScreen_prayer_form" placeholder="for God's will to be done in..." onChange={e => {setPrayer(e.target.value)}} />
+
+                        <InputGroup.Append >
+                                <Button
+                                    variant="outline-secondary"
+                                    size = 'lg'
+                                    disabled={isLoading}
+                                    onClick={!isLoading ? handleClick : null}
+                                >
+                                    {isLoading ? 'Loading…' : 'Submit'}
+                                </Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                
+                    <p style={response === "Successfully Submitted!" ? {color: 'green', fontSize: '16px'} : {color: 'red', fontSize: '16px'}}>{response}</p>
+
+
+                    </Card.Body>
+
+                </Card>
+                : 
+                  <Card
+                      bg={"dark"}
+                      style={{ width: '54rem' , height: '30rem', padding: '20px'}}
+                      data-testid= "invalid_group_card"
+                  >
+                      <Card.Body style={{color: returnIfColor("", 'lightblue'),textAlign: 'center'}}>
+                        <Card.Title as="h1" data-testid="PrayerAccept_title" style={{textAlign: 'center'}}>Oops, wrong place... </Card.Title>
+                        
+                          {
+                            validGroup === 'doesNotExist' ? <><br/><p>This group does not exist</p> 
+                            <br/> <p>Contact your administrator about this link</p></>
+                            : validGroup === 'notAccepting' ? <p>This group is not accepting prayer requests at this time</p>
+                            : <p>Unknown error.  Try again or report the issue to customer service</p>
+                          }                      
+                        
+                      </Card.Body>
+                  </Card>
+
+            } 
+            {/* end of validGroup == 'valid' ? : */}
+
+          </Row>
+        }
+        {/* end of validGroup == 'loading' ? : */}
+
         </Container>
 
     </>
