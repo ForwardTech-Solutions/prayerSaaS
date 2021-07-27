@@ -21,6 +21,7 @@ import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
 import IndividualPrayerScreen from '../PrayerScreen/IndividualPrayerScreen';
 import GroupScreen from '../GroupScreen/GroupScreen';
 import IndividualListScreen from '../ListScreen/IndividualListScreen';
+import EmailGroupsScreen from '../emailFlow/EmailGroupsScreen'
 
 
 //initials
@@ -271,7 +272,7 @@ function Dashboard() {
       .then(response => response.text())
       .then(result => {
         const parsed = JSON.parse(result)
-        console.log("allLists: "+ result)
+        //console.log("allLists: "+ result)
         setlists(parsed.lists)
       })
       .catch(error => console.log('fetchALlLists Error', error));
@@ -335,6 +336,10 @@ function Dashboard() {
                         </NavLink>
                         <NavLink to="/prayer/079d0a30-ce06-11eb-b232-83b302e62eee">
                             Prayer: muffin
+                        </NavLink>
+
+                        <NavLink to="/email_groups">
+                            Email Groups
                         </NavLink>
                      
                         <NavLink to="/me" data-testid="MyInfo_link">
@@ -420,6 +425,7 @@ function Dashboard() {
 
                   <Route path="/list/:id" component={IndividualListScreen} />
   
+                  <Route path="/email_groups" component={EmailGroupsScreen} />
 
                   <Route path="/me" >
                     <>
