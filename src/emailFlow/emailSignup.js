@@ -8,7 +8,7 @@ function EmailSignupScreen(props) {
   const [isLoading, setisLoading] = useState()
 
   useEffect(() => {
-
+   
   }, []);
 
 
@@ -35,7 +35,7 @@ function EmailSignupScreen(props) {
             myHeaders.append("Content-Type", "application/json");
 
             var jayson = JSON.stringify({
-                "address": address,
+                "address": props.match.params.group,
                 "fullName": "Tim Test",
                 "prayergroup": "test_Group_1"
             })

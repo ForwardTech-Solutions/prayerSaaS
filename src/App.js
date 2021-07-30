@@ -17,7 +17,7 @@ import Dashboard from './dashboard/Dashboard';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import EmailSignupScreen from './emailFlow/emailSignup'
 import GroupAcceptPrayerScreen from './GroupScreen/Group_AcceptPrayersScreen'
-
+import RedirectPage from './common/QR/RedirectPage'
 
 //after imports
 Amplify.configure(aws_exports);
@@ -29,9 +29,10 @@ function toRender() {
 
   return  <BrowserRouter>
             <Switch>
-              <Route exact path="/email-signup" component={EmailSignupScreen}/>
+              <Route exact path="/email-signup/:group" component={EmailSignupScreen}/>
               <Route exact path="/email-unsubscribe" component={EmailSignupScreen}/>
               <Route exact path="/GroupAcceptPrayerScreen/:id" component={GroupAcceptPrayerScreen}/>
+              <Route exact path="/Redirect/:id" component={RedirectPage}/>
               <Route path="/">
                   <Dashboard/>
               </Route>

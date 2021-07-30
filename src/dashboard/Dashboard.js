@@ -14,7 +14,6 @@ import {Container, Row, Col, Button, Card, Navbar } from 'react-bootstrap'
 import { Switch, Route, NavLink } from 'react-router-dom';
 
 
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./sidebar.js";
 import MyPrayerScreen from "../PrayerScreen/MyPrayerScreen"
@@ -416,7 +415,8 @@ function Dashboard() {
           {/* Rest of the Dashboard */}
           <Col  xs={10} id="page-content-wrapper">
               <Switch>
-
+                  
+                  {/* routes */}
                   <Route path="/prayer/:id" component={IndividualPrayerScreen} />
 
 
@@ -424,6 +424,7 @@ function Dashboard() {
 
 
                   <Route path="/list/:id" component={IndividualListScreen} />
+
   
                   <Route path="/email_groups" component={EmailGroupsScreen} />
 
@@ -435,6 +436,7 @@ function Dashboard() {
                         <h3>pSaaS User: {currentUser ? "" : "null"}</h3>
                         <h4>id: {currentUser ? currentUser.id : ""}</h4>
                         <h4>username: {currentUser ? currentUser.username : ""}</h4>
+                        
                     </>    
                   </Route>
 

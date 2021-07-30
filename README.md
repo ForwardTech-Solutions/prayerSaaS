@@ -69,7 +69,7 @@ this is how i keep track of stuff.  ik it sucks
 
 ### todo other 
 - move all API hardcodes to environment variables
-
+- Format emails in email blasts to be pretty 
 
 ### todo long term:
 - figure out how i wanna do prayer groups vs email groups (together or seperate)
@@ -87,16 +87,22 @@ lots i guess
         - an accurate list of groups pops up
         - if one is clicked, emails are sent
             - email contains the prayer data (description, author, group)
+- redirect page
+    - make sure the feedback is accurate
+    - make sure it redirects correctly
+
+- QR Object
+    -QR Image displays
 
 
 
 
 
 ## bugs: 
-   - currentUser gets replaced with [ ] (blank) sometimes
-   - email response says "Successful" on any network reply
-   - clicking on one list link (on the sidebar) and then a different one does not change the screen, only the URL
-   - you can have duplicates prayers in a list and can do so by adding them to a list 
+   - currentUser gets replaced with [ ] (blank) sometimes ((on dashboard))
+   - email response ((on email signup)) page says "Successful" on any network reply
+   - clicking on one list link ((on the sidebar)) and then a different one does not change the screen, only the URL
+   - you can have duplicates prayers in a list and can do so by just adding them to a list again 
 
 
 

@@ -8,7 +8,9 @@ const PListLined = props => {
           <Col>
                 {
                   props.prayersList.map((prayer, index) => (
-                    <Row>
+                    <Row
+                      key={index}
+                    >
         
 
                           <Card

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Card, Button} from "react-bootstrap";
+import {Card, Button, Row, Col} from "react-bootstrap";
 import {Auth} from 'aws-amplify';
 
+import QRObject from '../common/QR/QRObject'
 
 
 function EmailGroupsScreen(props) {
@@ -69,35 +70,50 @@ function EmailGroupsScreen(props) {
   return (
     <>
         {/* <p>{JSON.stringify(groups)}</p> */}
+        {/* <QRObject destination={process.env.REACT_APP_BASE_URL + "/email-signup/" + "TFBC_group_1"}/> */}
         {
             (groups ? groups : []).map((group, index) => {
 
               return (
                 <div key={index}>
+                  <Row>
+                    <Col>
                     <h2>{group[0].prayergroup}</h2>
                     {group.map((email, i) => {
                         return(
                             
                                 <Card
                                     bg={"dark"} 
-                                    style={{ width: '32rem', margin: 20, padding:10 }}
+                                    style={{ width: '32rem', height:'11rem', margin: 10, padding:5 }}
                                     data-testid= "individual_prayer_card"
                                     key={email.prayergroup + "[" + i + "]"}
                                 >
                                     <Card.Body style={{color: returnIfColor(email.prayergroup, 'lightblue')}}>
-                                    <p className="smallText">address:{email.address}</p>
-                                    <p className="smallText">subscribed:{email.subscribed ? ' true' : ' false'}</p>
-                                    <p className="smallText">name:{email.fullName}</p>
-                                    <p className="smallText">id:{email.id}</p>
+                                   <Row>
+                                      <Col>
+                                        <p className="smallText">address:{email.address}</p>
+                                        <p className="smallText">subscribed:{email.subscribed ? ' true' : ' false'}</p>
+                                        <p className="smallText">name:{email.fullName}</p>
+                                        <p className="smallText">id:{email.id}</p>
+                                      </Col>
+                                      <Col>
+                                        <Button style={{}} variant="outline-danger" onClick={() => {console.log('unsubscribeThisUser button pressed')}}>Unsubscribe this User (DOESNT WORK YET): {email.fullName}</Button>
+                                      </Col>
+                                    </Row>
                                     </Card.Body>
                                    
                                   
-                                <Button style={{}} variant="outline-danger" onClick={() => {console.log('unsubscribeThisUser button pressed')}}>Unsubscribe this User (DOESNT WORK YET): {email.fullName}</Button>
+                                
                                 </Card> 
                             
-                        )
-                    }
+                          )
+                      }
                     )}
+                    </Col>
+                    <Col>
+                        <QRObject destination={process.env.REACT_APP_BASE_URL + "/email-signup/" + group[0].prayergroup}/>
+                    </Col>
+                  </Row>
                 </div> 
                 )
           })

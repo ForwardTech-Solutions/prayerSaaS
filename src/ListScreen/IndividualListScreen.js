@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useHistory} from 'react-router-dom';
-import {Row, Col, Button, Modal} from "react-bootstrap";
+import {Row, Col, Button, Modal, Card} from "react-bootstrap";
+
 
 import {Auth} from 'aws-amplify';
 
@@ -11,7 +12,8 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
 
     const [prayers, setPrayers] = useState([])
     const [prayerIds, setPrayerIds] = useState([])
-
+    const [emailGroupNames, setEmailGroupNames] = useState([])
+    const [emailAddresses, setEmailAddresses] = useState([]);
 
     const [thisList, setThisList] = useState()
     const [selectedAdd, setSelectedAdd] = useState([])
@@ -19,21 +21,29 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
     const [selectedRemove, setSelectedRemove] = useState([])
 
 
-    const [showModal, setShowModal] = useState(false)
+    const [showPrayerModal, setShowPrayerModal] = useState(false)
+    const [showEmailModal, setShowEmailModal] = useState(false)
+
 
     const history = useHistory(); 
 
+    const [groups, setGroups] = useState()
 
+
+       
     useEffect(() => {
         
         fetchThisList(props.match.params.id)
 
         fetchMyPrayers()
 
+        fetchEmailGroups();  
+
+
      }, [])
 
      async function fetchThisList(id) {
-
+        //this code authenticat
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
@@ -77,12 +87,52 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
             .then(result => {
                 const parsed = JSON.parse(result)         
                 setPrayers(parsed.prayers)
-                console.log("indListScreen: " + result)
+                // console.log("individual_List_Screen: " + result)
             })
             .catch(error => console.log('error', error));
         
     }
 
+
+    async function fetchEmailGroups() {
+              
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+    
+        var requestOptions = {
+            headers: myHeaders,
+            method: 'GET',
+            redirect: 'follow',
+            mode: "cors"
+        };
+        
+        //https://45al5921x1.execute-api.us-east-1.amazonaws.com/dev/email
+        fetch("https://45al5921x1.execute-api.us-east-1.amazonaws.com/dev/email", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                const parsed = JSON.parse(result)
+                console.log("emailGroupScreenFetch:" + result)
+                console.log("parsed", parsed)
+                setEmailAddresses(parsed.email_addresses)
+                setEmailGroupNames(splitArrayByPrayerGroup(parsed.email_addresses))
+            })
+            .catch(error => console.log('error', error));
+      
+      };
+
+
+    //function that returns all distinct element.prayergroup values from array
+    function splitArrayByPrayerGroup(array) {
+        var _groups = []
+        array.forEach(function(element) {
+            if (_groups.indexOf(element.prayergroup) == -1) {
+                _groups.push(element.prayergroup)
+            }
+        });
+        return _groups;
+    }
+   
 
     async function handleEditName() {
         console.log("edit clicked")
@@ -227,6 +277,66 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
 
 
 
+    async function handleSendListToEmailGroup(emailGroupName) {
+        console.log("sendListToEmailGroup:", emailGroupName)
+
+        //TO: filter emailAddresses to only the emails where prayergroup is this emailGroupName
+        var _tos = emailAddresses.filter(x => x.prayergroup === emailGroupName)
+            //map to array of addresses
+            .map(x => x.address)
+        
+        //SUBJECT: just the list name
+        var _subject = "Prayer List for " + thisList.listName
+
+        //prepare the prayer info
+        var _prayers = thisList ? thisList.prayerIds.map(x => {return prayers.filter(y => y.id === x.prayerId)[0]}) : []
+        // var _prayerTitles = _prayers.map(x => {return x.prayer})
+        // var _prayerUsernames = _prayers.map(x => {return x.username})
+
+        //BODY: the list name and the prayerIds
+        var _body = "Prayer List for " + thisList.listName + "\n\n" + _prayers.map(x => {return x.prayer + " by " + x.username}).join("\n")
+
+        var myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Authorization", `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
+
+        var _textBody = "all these requests";
+
+        var jsonBody = {
+            to: _tos,
+            from: 'prayer@forwardtechfl.com',
+            subject: _subject,
+            body: _body,
+        }
+
+        var requestOptions = {
+          headers: myHeaders,
+          method: 'post',
+          redirect: 'follow',
+          body: JSON.stringify(jsonBody),
+          mode: "cors"
+
+        };
+
+        console.log(jsonBody)
+
+        fetch(process.env.REACT_APP_EMAIL_SERVICE_REST_ENDPOINT + "/send-email", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            console.log('successfully sent emails')
+            setShowEmailModal(false)
+          })
+          .catch(error => console.log('sent email Error', error));
+        
+
+                //TO DO: unlock the aws production teir
+
+
+
+    }
+
+
+
     
 
 
@@ -248,13 +358,8 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
         
         <LinedPrayerList 
             prayersList={
-                (thisList ? prayers : []).filter((element) => {
-                    for(var i=0; i< thisList.prayerIds.length; i++) {
-                        if(element.id === thisList.prayerIds[i].prayerId)
-                            return true
-                    }
-                    return false
-                })
+                //filter prayers to only those whos id is in thisList.prayerIds
+                thisList ? thisList.prayerIds.map(x => {return prayers.filter(y => y.id === x.prayerId)[0]}) : []
 
             }
             updateChecked={(event, prayerId) => { handleUpdateCheckedRemove(event, prayerId) }}
@@ -262,8 +367,9 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
 
 
         {/* add selected to list prayerIds button */}
-        <Button size="sm" variant="outline-info" onClick={()=> {setShowModal(true)}}>Add to This List</Button> 
+        <Button size="sm" variant="outline-info" onClick={()=> {setShowPrayerModal(true)}}>Add to This List</Button> 
         <br />
+        <Button size="sm" variant="outline-success" onClick={()=> {setShowEmailModal(true)}}>Send this List to Email Group</Button>
 
 
         {/* If selected is not empty, display button */}
@@ -279,14 +385,14 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
 
 
 
-        {/* Modal */}
-        <Modal show={showModal} onHide={()=> {setShowModal(false)}} scrollable={true} data-testid="IndividualList_AddPrayer_Modal">
+        {/* Prayer List Modal */}
+        <Modal show={showPrayerModal} onHide={()=> {setShowPrayerModal(false)}} scrollable={true} data-testid="IndividualList_AddPrayer_Modal">
 
             <Modal.Header closeButton>
                 <Modal.Title>Add to This List</Modal.Title>
                 {selectedAdd.length > 0 
                     ?   // {/* add selected to list prayerIds button */}
-                        <Button size="sm" variant="outline-success" onClick={()=> {addSelectedToThisListPrayerIds(); setShowModal(false)}}>Add Selected to This List</Button>                
+                        <Button size="sm" variant="outline-success" onClick={()=> {addSelectedToThisListPrayerIds(); setShowPrayerModal(false)}}>Add Selected to This List</Button>                
                     :   // show disabled button
                         <Button size="sm" variant="outline-success" disabled>Add Selected to This List</Button>
                 }
@@ -307,7 +413,38 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
                     
             </Modal.Body>
         </Modal>
+
+
+        
+        {/* Email Groups Modal */}
+        <Modal show={showEmailModal} onHide={()=> {setShowEmailModal(false)}} scrollable={true} data-testid="IndividualList_AddPrayer_Modal">
+
+            <Modal.Header closeButton>
+                <Modal.Title>Send to which Email Group</Modal.Title>                               
+            </Modal.Header>
+            <Modal.Body>
+
+                {/* Email Groups */}
+                {
+                    emailGroupNames.map((emailGroupName, i) => {
+                        return (
+                            
+                            <Card key={"emailGroup" + i}>
+                                <Card.Header>
+                                    <Card.Title>{emailGroupName}</Card.Title>
+                                    <Button size="sm" variant="outline-info" onClick={()=> {handleSendListToEmailGroup(emailGroupName)}}>Send</Button>
+                                </Card.Header>
+                            </Card>
+                        )
+                    })
+                }
+
+
                     
+            </Modal.Body>
+        </Modal>
+
+
 
     </>
     );
