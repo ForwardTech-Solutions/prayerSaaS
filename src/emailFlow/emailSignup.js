@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {Card, Button, Form, Row, Container, InputGroup} from "react-bootstrap";
+import {Card, Button, Form, Row, Container, InputGroup, Col} from "react-bootstrap";
+
+import ReCaptchaComp from "../common/ReCaptcha";
 
 function EmailSignupScreen(props) {
 
   const [address, setAddress] = useState()
   const [response, setResponse] = useState()
   const [isLoading, setisLoading] = useState()
+  const [captchaPassed, setCaptchaPassed] = useState()
 
   useEffect(() => {
    
@@ -71,6 +74,12 @@ function EmailSignupScreen(props) {
 
   }
 
+  function handleCapcthaChange(value) {
+    console.log("ReCaptcha value: ", value)
+    if(value.length > 0) {
+      setCaptchaPassed(true)
+    }
+  }
 
 
 
@@ -89,11 +98,11 @@ function EmailSignupScreen(props) {
 
         <Card
             bg={"dark"}
-            style={{ width: '54rem' , height: '18rem', padding: '20px'}}
+            style={{ width: '54rem' , height: '22rem', padding: '20px'}}
             data-testid= "email_signup_card"
         >
             <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
-
+              
             <Card.Title as="h1" data-testid="EmailSignup_title" style={{textAlign: 'center'}}>Join the TFBC Prayer Team Email List</Card.Title>
 
 
@@ -107,7 +116,7 @@ function EmailSignupScreen(props) {
                         <Button
                             variant="outline-secondary"
                             size = 'lg'
-                            disabled={isLoading}
+                            disabled={isLoading || !captchaPassed}
                             onClick={!isLoading ? handleClick : null}
                         >
                             {isLoading ? 'Loading…' : 'Sign Up'}
@@ -116,7 +125,9 @@ function EmailSignupScreen(props) {
             </InputGroup>
         
             <p style={response === "Successfully Signed Up!" ? {color: 'green', fontSize: '16px'} : {color: 'red', fontSize: '16px'}}>{response}</p>
-
+            <div style={{justifyContent: 'center', marginTop: '20px'}}>
+              <ReCaptchaComp onChange={handleCapcthaChange} style={{}} />
+            </div>
 
             </Card.Body>
 
