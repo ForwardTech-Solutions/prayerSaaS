@@ -79,7 +79,7 @@ this is how i keep track of stuff.  ik it sucks
 - write tests for email blast, redirect page, qr, and captcha
 - Document use-cases and work flows
 - optimize for mobile 
-    -  **unauthorized screens** first
+    -  *unauthorized screens* first
     - others if it's easy 
 
 
@@ -103,14 +103,19 @@ this is how i keep track of stuff.  ik it sucks
 - list page 
     - 'blast this page to group' button exists
         - an accurate list of groups pops up
-        - if one is clicked, emails are sent
-            - email contains the prayer data (description, author, group)
+        - if one is clicked, feedback is provided
+
 - redirect page
     - make sure the feedback is accurate
     - make sure it redirects correctly
 
+
+### maybe test? idk if/how
 - QR Object
     -QR Image displays
+- Email Blast
+    - emails are sent to the right people
+    - emails contain the right data
 
 
 

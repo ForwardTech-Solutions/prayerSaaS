@@ -9,7 +9,6 @@ import { Redirect } from 'react-router-dom';
 
     useEffect(() => {
          function findDestination(id) {
-            //https://wdq8s7zbcd.execute-api.us-east-1.amazonaws.com/dev/QR/ffb9e2c0-e5ac-11eb-8c31-4be054f54164
 
 
             var requestOptions = {
@@ -18,7 +17,7 @@ import { Redirect } from 'react-router-dom';
                mode: 'cors',
              };
              
-             fetch("https://wdq8s7zbcd.execute-api.us-east-1.amazonaws.com/dev/QR/" + id, requestOptions)
+             fetch(process.env.REACT_APP_QR_SERVICE_REST_ENDPOINT +  "/QR/" + id, requestOptions)
                .then(response => response.text())
                .then(result => {
                   console.log('redirectPage findDest fetch result: ' + result);
@@ -33,7 +32,7 @@ import { Redirect } from 'react-router-dom';
                })
                .catch(error => {console.log('error', error)
                setdisplayText('Error: invalid URL');
-            });
+               });
 
          }
 
