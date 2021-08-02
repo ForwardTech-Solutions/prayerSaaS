@@ -3,6 +3,9 @@
 ## To Do's
 this is how i keep track of stuff.  ik it sucks
 
+<details >
+<summary>Past to do's</summary>
+
 ### todo pre 5/27
 - prayer GETall GETone GETme PUT
 - group GET PUT
@@ -45,14 +48,6 @@ this is how i keep track of stuff.  ik it sucks
             - prayergroups need fields
                 - accepts_unauthorized_requests
 
-
-
-
-
-
-
-
-## todo (currently working on) 
 - blast a list to an email group
     - create a 'email groups' tab on sidebar to view all the groups infos
 
@@ -64,22 +59,37 @@ this is how i keep track of stuff.  ik it sucks
             and the destination is where you are redirected todo
     
     
-- captcha on accept prayer
+- captcha 
+
+</details> 
+<!-- End of "Past to do's dropdown" -->
+
+
+
+
+
+##  ---- todo (currently working on)  ----
+##  --------------------------------------
+- add captcha to accept prayer (currently just on email signup)
+- write tests for email blast, redirect page, qr, and captcha
+- Document use-cases and work flows
+
 
 
 ### todo other 
 - move all API hardcodes to environment variables
 - Format emails in email blasts to be pretty 
+- Complete style refresh
+- fix bugs
 
-### todo long term:
+### todo long term: 
 - figure out how i wanna do prayer groups vs email groups (together or seperate)
         - validate that the group is a real group
 - incoroporate testing
 - figure out what the benefit of this platform even is
     - Update: been working on that.  it is a set of tools to empower churches to create active and powerful prayer cultures
 
-### to done
-lots i guess
+
 
 ## test to write:      
 - list page 
@@ -99,8 +109,8 @@ lots i guess
 
 
 ## bugs: 
-   - currentUser gets replaced with [ ] (blank) sometimes ((on dashboard))
-   - email response ((on email signup)) page says "Successful" on any network reply
+   - currentUser gets replaced with [ ] (blank) sometimes ((on dashboard.js))
+   - email response ((on email signup)) page says "Successful" on any network reply, not only success
    - clicking on one list link ((on the sidebar)) and then a different one does not change the screen, only the URL
    - you can have duplicates prayers in a list and can do so by just adding them to a list again 
 
