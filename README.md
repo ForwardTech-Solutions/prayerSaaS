@@ -61,6 +61,12 @@ this is how i keep track of stuff.  ik it sucks
     
 - captcha 
 
+
+
+### todo july
+- add captcha to accept prayer (currently just on email signup)
+
+
 </details> 
 <!-- End of "Past to do's dropdown" -->
 
@@ -70,9 +76,11 @@ this is how i keep track of stuff.  ik it sucks
 
 ##  ---- todo (currently working on)  ----
 ##  --------------------------------------
-- add captcha to accept prayer (currently just on email signup)
 - write tests for email blast, redirect page, qr, and captcha
 - Document use-cases and work flows
+- optimize for mobile 
+    -  **unauthorized screens** first
+    - others if it's easy 
 
 
 

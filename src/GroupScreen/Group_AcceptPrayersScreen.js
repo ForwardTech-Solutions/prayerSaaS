@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Card, Button, Form, Row, Container, InputGroup} from "react-bootstrap";
 import { checkForBadWords } from "../common/functions/validation";
 
+import ReCaptchaComp from "../common/ReCaptcha";
+
 
 //TO DO: this is just a copy and paste from the email flow, need to refactor this.  
 //endpoints can be found at https://wdq8s7zbcd.execute-api.us-east-1.amazonaws.com/dev /dict(post,get[id]) and /QR(get[id]) 
@@ -17,6 +19,9 @@ function GroupAcceptPrayerScreen(props) {
   const [isLoading, setisLoading] = useState()
 
   const [validGroup, setValidGroup] = useState("loading") //values: doesNotExist, valid, notAccepting, or loading 
+
+  const [captchaPassed, setCaptchaPassed] = useState()
+
 
   
   useEffect(() => {
@@ -69,6 +74,13 @@ function GroupAcceptPrayerScreen(props) {
         return '#' + first
       else
         return backup
+  }
+
+  function handleCapcthaChange(value) {
+    console.log("ReCaptcha value: ", value)
+    if(value.length > 0) {
+      setCaptchaPassed(true)
+    }
   }
 
 //   async function deletePrayerByID( id ) {
@@ -156,7 +168,7 @@ function GroupAcceptPrayerScreen(props) {
             {validGroup === 'valid' ? 
                 <Card
                     bg={"dark"}
-                    style={{ width: '54rem' , height: '30rem', padding: '20px'}}
+                    style={{ width: '54rem' , height: '34rem', padding: '20px'}}
                     data-testid= "prayer_accept_card"
                 >
                     <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
@@ -183,7 +195,7 @@ function GroupAcceptPrayerScreen(props) {
                                 <Button
                                     variant="outline-secondary"
                                     size = 'lg'
-                                    disabled={isLoading}
+                                    disabled={isLoading || !captchaPassed}
                                     onClick={!isLoading ? handleClick : null}
                                 >
                                     {isLoading ? 'Loading…' : 'Submit'}
@@ -192,6 +204,11 @@ function GroupAcceptPrayerScreen(props) {
                     </InputGroup>
                 
                     <p style={response === "Successfully Submitted!" ? {color: 'green', fontSize: '16px'} : {color: 'red', fontSize: '16px'}}>{response}</p>
+
+
+                    <div style={{justifyContent: 'center', marginTop: '20px'}}>
+                      <ReCaptchaComp onChange={handleCapcthaChange} style={{}} />
+                    </div>
 
 
                     </Card.Body>
