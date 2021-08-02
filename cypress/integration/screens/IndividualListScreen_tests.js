@@ -15,20 +15,21 @@ describe("IndividualPrayerScreen Tests", function () {
 
 
     
-
-    //this test assumes theres a list with id 6ad60f20-d8f6-11eb-948a-ab706763a651 and title 'Rolls Royce Pull up'
-    it('loads from URL path', () => {
+    ///<summary>
+    /// this test assumes theres a list with id 6ad60f20-d8f6-11eb-948a-ab706763a651 and title 'Rolls Royce Pull up'
+    ///</summary>
+    it('loads from URL path (assumes data)', () => {
         cy.visit('/list/6ad60f20-d8f6-11eb-948a-ab706763a651')
 
         //how you know its individual_list_screen
         cy.get('[data-testid="thisList_title"]')
             .contains('Rolls Royce Noice')
-    })
 
 
-    //this test assumes theres a list with id 6ad60f20-d8f6-11eb-948a-ab706763a651 and title 'Rolls Royce Pull up'
-    it('loads from Dashboard', () => {
-        //cy.visit('/')
+
+
+
+        cy.visit('/')
         cy.contains('Rolls Royce Noice')
             .click()
 
@@ -36,7 +37,11 @@ describe("IndividualPrayerScreen Tests", function () {
         //how you know its individual_list_screen
         cy.get('[data-testid="thisList_title"]')
             .contains('Rolls Royce Noice')
+
     })
+
+
+   
 
 
     it("can create a new list", function () {
@@ -49,9 +54,34 @@ describe("IndividualPrayerScreen Tests", function () {
         cy.get("[data-testid='List_newListButton']")
             .click()
 
-        cy.contains('Test Name New List')
+        cy.contains('Test Name New List', { timeout: 10000 })
 
     })
+
+    ///<summary>
+    /// this test assumes theres a emailGroup called test_Group_1
+    ///</summary>
+    it("the send email blast workflow is functional", function () {
+
+        //intercept network requests
+        cy.intercept("POST","https://45al5921x1.execute-api.us-east-1.amazonaws.com/dev/send-email", {})
+        
+
+
+        //cy.visit('/')
+        cy.contains('Test Name New List')
+            .click()
+
+        cy.contains('Send this List to Email Group')
+            .click()
+        
+        cy.contains('Send to which Email Group')
+        cy.get("[data-testid='test_Group_1_send_button']")
+            .click()
+
+        cy.contains('Emails sent')
+    })
+
 
 
 

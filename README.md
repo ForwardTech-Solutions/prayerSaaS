@@ -100,10 +100,6 @@ this is how i keep track of stuff.  ik it sucks
 
 
 ## test to write:      
-- list page 
-    - 'blast this page to group' button exists
-        - an accurate list of groups pops up
-        - if one is clicked, feedback is provided
 
 - redirect page
     - make sure the feedback is accurate
@@ -111,9 +107,9 @@ this is how i keep track of stuff.  ik it sucks
 
 
 ### maybe test? idk if/how
-- QR Object
-    -QR Image displays
-- Email Blast
+- QR Object (on emailGroup)
+    - QR Image displays
+- Email Blast (on list page)
     - emails are sent to the right people
     - emails contain the right data
 

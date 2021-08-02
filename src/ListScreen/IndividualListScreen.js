@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useHistory} from 'react-router-dom';
-import {Row, Col, Button, Modal, Card} from "react-bootstrap";
+import {Row, Col, Button, Modal, Card, Toast, T} from "react-bootstrap";
 
 
 import {Auth} from 'aws-amplify';
@@ -24,6 +24,8 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
     const [showPrayerModal, setShowPrayerModal] = useState(false)
     const [showEmailModal, setShowEmailModal] = useState(false)
 
+    const [showFeedbackToast, setShowFeedbackToast] = useState(false)
+    const [toastFeedback, setToastFeedback] = useState('null')
 
     const history = useHistory(); 
 
@@ -325,8 +327,16 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
           .then(result => {
             console.log('successfully sent emails')
             setShowEmailModal(false)
+            setToastFeedback("Emails sent")
+            setShowFeedbackToast(true)
           })
-          .catch(error => console.log('sent email Error', error));
+          .catch(error => {
+              console.log('sent email Error', error)
+              setShowEmailModal(false)
+              setToastFeedback("Error sending emails")
+              setShowFeedbackToast(true)
+          
+            });
         
 
                 //TO DO: unlock the aws production teir
@@ -380,6 +390,21 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
             
             </> : ""
         }
+
+        
+        <Toast 
+            onClose={() => setShowFeedbackToast(false)} 
+            show={showFeedbackToast} 
+            delay={5000} 
+            autohide 
+            bg='success' //not working idk why
+            style={{marginTop: '30px'}}
+        >
+          <Toast.Header>
+            <strong className="me-auto">PrayerSaaS</strong>
+          </Toast.Header>
+          <Toast.Body style={{color: 'black'}}>{toastFeedback}</Toast.Body>
+        </Toast>
         
 
 
@@ -432,7 +457,7 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
                             <Card key={"emailGroup" + i}>
                                 <Card.Header>
                                     <Card.Title>{emailGroupName}</Card.Title>
-                                    <Button size="sm" variant="outline-info" onClick={()=> {handleSendListToEmailGroup(emailGroupName)}}>Send</Button>
+                                    <Button size="sm" variant="outline-info" data-testid={emailGroupName + "_send_button"} onClick={()=> {handleSendListToEmailGroup(emailGroupName)}}>Send</Button>
                                 </Card.Header>
                             </Card>
                         )
