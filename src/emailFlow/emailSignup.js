@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {Card, Button, Form, Row, Container, InputGroup, Col} from "react-bootstrap";
 
 import ReCaptchaComp from "../common/ReCaptcha";
@@ -8,7 +8,8 @@ function EmailSignupScreen(props) {
   const [address, setAddress] = useState()
   const [response, setResponse] = useState()
   const [isLoading, setisLoading] = useState()
-  const [captchaPassed, setCaptchaPassed] = useState()
+  const [captchaToken, setCaptchaToken] = useState()
+  const captchaRef = useRef(null)
 
   useEffect(() => {
    
@@ -31,30 +32,38 @@ function EmailSignupScreen(props) {
   function handleClick() {
       setisLoading(true)
     var result = validateEmail(address)
-    if(result) {
+    if(result && captchaToken.length > 0) {
 
 
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
             var jayson = JSON.stringify({
-                "address": props.match.params.group,
+                "address": address,
                 "fullName": "Tim Test",
-                "prayergroup": "test_Group_1"
+                "prayergroup": props.match.params.group,
+                "token": captchaToken,
             })
 
             var requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: jayson,
-                redirect: 'follow'
+                redirect: 'follow',
+                mode: 'cors',
             };
             console.log(JSON.stringify(jayson))
+
+////////////////////////////////////////////////////////////////////////////////
+              ////////////////////////////////////////////////////////////v
+              //TO DO:  add cors to the backend response
+////////////////////////////////////////////////////////////////////////////////
 
             fetch("https://45al5921x1.execute-api.us-east-1.amazonaws.com/dev/email", requestOptions)
             .then(response => response.text())
             .then(result => {
-                setResponse("Successfully Signed Up!");
+                setResponse(result)
+                //setResponse("Successfully Signed Up!");
                 setAddress("")
                 setisLoading(false)
             })
@@ -62,6 +71,7 @@ function EmailSignupScreen(props) {
                 console.log('error', error)
                 setResponse("Sign Up failed... Please try again later");
                 setisLoading(false)
+                resetCaptcha()
             });
 
 
@@ -69,16 +79,23 @@ function EmailSignupScreen(props) {
     else {
         setResponse("Email address invalid: " + address);
         setisLoading(false)
-
+        resetCaptcha()
     }
 
   }
 
-  function handleCapcthaChange(value) {
-    console.log("ReCaptcha value: ", value)
-    if(value.length > 0) {
-      setCaptchaPassed(true)
-    }
+  // function handleCapcthaChange(value) {
+  //   console.log("ReCaptcha value: ", value)
+  //   if(value.length > 0) {
+  //     setCaptchaToken(value)
+  //   }
+  // }
+
+
+
+  function resetCaptcha(){
+    // captchaRef.current.reset()
+    // setCaptchaToken("")
   }
 
 
@@ -116,7 +133,7 @@ function EmailSignupScreen(props) {
                         <Button
                             variant="outline-secondary"
                             size = 'lg'
-                            disabled={isLoading || !captchaPassed}
+                            disabled={isLoading || !captchaToken}
                             onClick={!isLoading ? handleClick : null}
                         >
                             {isLoading ? 'Loading…' : 'Sign Up'}
@@ -126,7 +143,7 @@ function EmailSignupScreen(props) {
         
             <p style={response === "Successfully Signed Up!" ? {color: 'green', fontSize: '16px'} : {color: 'red', fontSize: '16px'}}>{response}</p>
             <div style={{justifyContent: 'center', marginTop: '20px'}}>
-              <ReCaptchaComp onChange={handleCapcthaChange} style={{}} />
+              <ReCaptchaComp onChange={setCaptchaToken} style={{}} />
             </div>
 
             </Card.Body>

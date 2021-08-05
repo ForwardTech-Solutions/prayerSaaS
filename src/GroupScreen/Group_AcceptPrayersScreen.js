@@ -20,7 +20,7 @@ function GroupAcceptPrayerScreen(props) {
 
   const [validGroup, setValidGroup] = useState("loading") //values: doesNotExist, valid, notAccepting, or loading 
 
-  const [captchaPassed, setCaptchaPassed] = useState()
+  const [captchaToken, setCaptchaToken] = useState('')
 
 
   
@@ -76,12 +76,12 @@ function GroupAcceptPrayerScreen(props) {
         return backup
   }
 
-  function handleCapcthaChange(value) {
-    console.log("ReCaptcha value: ", value)
-    if(value.length > 0) {
-      setCaptchaPassed(true)
-    }
-  }
+  // function handleCapcthaChange(value) {
+  //   console.log("ReCaptcha value: ", value)
+  //   if(value.length > 0) {
+  //     setCaptchaToken(true)
+  //   }
+  // }
 
 //   async function deletePrayerByID( id ) {
 //       console.log("delete code not written, but it should delete prayer: ", id)
@@ -109,17 +109,19 @@ function GroupAcceptPrayerScreen(props) {
                 "username": "",
                 "fullName": (fullName === "" || fullName == null) ? "Anonymous" : fullName,
                 "prayerGroupId": props.match.params.id,
-                "source" : "addPrayerTo/" + props.match.params.id
+                "source" : "addPrayerTo/" + props.match.params.id,
+                "token": captchaToken
             })
 
             var requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: jayson,
-                redirect: 'follow'
+                redirect: 'follow',
             };
             console.log(JSON.stringify(jayson))
 
+            //handleClick fetch
             fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/unauthorized", requestOptions)
             .then(response => response.text())
             .then(result => {
@@ -139,7 +141,7 @@ function GroupAcceptPrayerScreen(props) {
                 
             })
             .catch(error => {
-                console.log('error', error)
+                console.log('TOM: fetch error: ', error)
                 setResponse("Submit prayer failed... Please try again later");
                 setisLoading(false)
             });
@@ -195,7 +197,7 @@ function GroupAcceptPrayerScreen(props) {
                                 <Button
                                     variant="outline-secondary"
                                     size = 'lg'
-                                    disabled={isLoading || !captchaPassed}
+                                    disabled={isLoading || captchaToken === ""}
                                     onClick={!isLoading ? handleClick : null}
                                 >
                                     {isLoading ? 'Loading…' : 'Submit'}
@@ -207,7 +209,7 @@ function GroupAcceptPrayerScreen(props) {
 
 
                     <div style={{justifyContent: 'center', marginTop: '20px'}}>
-                      <ReCaptchaComp onChange={handleCapcthaChange} style={{}} />
+                      <ReCaptchaComp onChange={setCaptchaToken} style={{}} />
                     </div>
 
 

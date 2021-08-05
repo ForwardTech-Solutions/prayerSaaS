@@ -4,18 +4,18 @@
 this is how i keep track of stuff.  ik it sucks
 
 <details >
-<summary>Past to do's</summary>
+<summary>To Done: </summary>
 
-### todo pre 5/27
+###  pre 5/27
 - prayer GETall GETone GETme PUT
 - group GET PUT
 
-### todo 5/27
+###  5/27
 - move groups to bottom of sidebar
 - layout prayer cards like google keep
 - 'add prayer' as a button w/ popup 
     
-### todo 6/14 (and other dates before)
+###  6/14 (and other dates before)
 - refactor app into more disconnected components
 
 - research routing
@@ -26,7 +26,7 @@ this is how i keep track of stuff.  ik it sucks
     - API: user object (prayers, groups)
 
 
-### todo 6/15 
+###  6/15 
 - refactor Dashboard into more components
     - seperate add prayer button into its own thing
     - seperate {user}'s prayers into its own thing
@@ -35,7 +35,7 @@ this is how i keep track of stuff.  ik it sucks
     - make myPrayers and individualPrayers replace the current area that add a prayer and {user}'s prayers occupy
 
 
-### todo july
+### july
 - create static URL pages that can un-authorized accept prayers to a specific destination.  Make this url the destination of ^
         - something like /addPrayerTo/group/:id
             - only load page successfully if :id is valid
@@ -58,13 +58,14 @@ this is how i keep track of stuff.  ik it sucks
         -   have a dynamo table of key/destination pairs where key is the URL generated for the QR (and the value of the code)
             and the destination is where you are redirected todo
     
-    
+
+
+### august  
 - captcha 
+    - add captcha to email signup
+    - add captcha to accept prayer
 
 
-
-### todo july
-- add captcha to accept prayer (currently just on email signup)
 
 
 </details> 
@@ -79,16 +80,18 @@ this is how i keep track of stuff.  ik it sucks
 - write tests for email blast, redirect page, qr, and captcha
 - Document use-cases and work flows
 - optimize for mobile 
-    -  *unauthorized screens* first
+    -  *unauthorized screens* at least
     - others if it's easy 
 
 
 
-### todo other 
+### todo other (before MVP alpha)
 - move all API hardcodes to environment variables
 - Format emails in email blasts to be pretty 
 - Complete style refresh
 - fix bugs
+
+
 
 ### todo long term: 
 - figure out how i wanna do prayer groups vs email groups (together or seperate)
@@ -100,11 +103,9 @@ this is how i keep track of stuff.  ik it sucks
 
 
 ## test to write:      
+- fix tests that use captcha  https://stackoverflow.com/questions/58684920/cypress-testing-a-contact-form-with-google-recaptcha 
 
-- redirect page
-    - make sure the feedback is accurate
-    - make sure it redirects correctly
-
+- double check the feedback on the email blast (individual List screen)
 
 ### maybe test? idk if/how
 - QR Object (on emailGroup)
@@ -120,6 +121,7 @@ this is how i keep track of stuff.  ik it sucks
 ## bugs: 
    - currentUser gets replaced with [ ] (blank) sometimes ((on dashboard.js))
    - email response ((on email signup)) page says "Successful" on any network reply, not only success
+      - the captcha screens (group_accept and emailSignup) will return a 400 error if a bot.  The screen still displays a positive message
    - clicking on one list link ((on the sidebar)) and then a different one does not change the screen, only the URL
    - you can have duplicates prayers in a list and can do so by just adding them to a list again 
 

@@ -87,7 +87,7 @@ function MyPrayerScreen(props) {
       var putBody = JSON.stringify({
         "username": props.AWSUser,
         "prayer": formToSend.prayer,
-        "prayergroup": formToSend.groupname ? formToSend.groupname : "noGroup(null)",
+        "prayergroup": formToSend.groupname ? formToSend.groupname : "",
         "prayerGroupId": formToSend.groupid ? formToSend.groupid : "",
         "source": "MyPrayerScreen",
       });
@@ -96,7 +96,8 @@ function MyPrayerScreen(props) {
         method: 'POST',
         headers: myHeaders,
         body: putBody,
-        redirect: 'follow'
+        redirect: 'follow',
+        mode: "cors"
       };
 
       console.log("sending POST request to: ", process.env.REACT_APP_PRAYER_REST_ENDPOINT)
