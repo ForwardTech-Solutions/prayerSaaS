@@ -2,6 +2,7 @@
 /// <reference types="Cypress" />
 
 import "../../support/auth-provider-commands/cognito"
+import "../../support/recaptchaCommands"
 
 
 describe("GroupAcceptPrayerScreen Tests", function () {
@@ -55,6 +56,8 @@ describe("GroupAcceptPrayerScreen Tests", function () {
             cy.get('[id="PrayerScreen_prayer_form"]')    //form
                 .type("slut")
                 .should('have.value', 'slut')
+
+            cy.clickGoogleReCAPTCHA()
             
             //click
             cy.contains("Submit")                     //Submit button
@@ -71,6 +74,8 @@ describe("GroupAcceptPrayerScreen Tests", function () {
                 .type("{backspace}{backspace}{backspace}{backspace}{backspace}For this test to pass")
                 .should('have.value', 'For this test to pass')
 
+
+       
             //click
             cy.contains("Submit")                              //Submit button
                 .click()
@@ -100,16 +105,20 @@ describe("GroupAcceptPrayerScreen Tests", function () {
     })
 
 
-
+    /// <summary>
+    /// Test assumes there is a group with id 63adf880-bd93-11eb-a02b-dd913b116243 that accepts prayer requests
+    /// </summary>
     it('proves that leaving the name field blank results in fullName being "Anonymous"', () => {
             
-        var prayerBody = "TestPrayer" + Math.floor(Math.random() * 1000)
+        var prayerBody = "TestPrayer09151997" + Math.floor(Math.random() * 1000)
 
         //enter in the prayer without a name (unauthorized)
         cy.visit('/GroupAcceptPrayerScreen/63adf880-bd93-11eb-a02b-dd913b116243')          
 
             cy.get('[id="PrayerScreen_prayer_form"]')    //form
                 .type(prayerBody)
+
+            cy.clickGoogleReCAPTCHA()
 
             cy.contains("Submit")                              //sign up button
                 .click()
@@ -133,10 +142,12 @@ describe("GroupAcceptPrayerScreen Tests", function () {
 
     })
 
-
+    /// <summary>
+    /// Test assumes there is a group with id 63adf880-bd93-11eb-a02b-dd913b116243 that accepts prayer requests
+    /// </summary>
     it('proves that system works with a name included', () => {
             
-        var prayerBody = "TestPrayer" + Math.floor(Math.random() * 1000)
+        var prayerBody = "TestPrayer09151997" + Math.floor(Math.random() * 1000)
 
         //enter in the prayer without a name (unauthorized)
         cy.visit('/GroupAcceptPrayerScreen/63adf880-bd93-11eb-a02b-dd913b116243')          
@@ -146,6 +157,9 @@ describe("GroupAcceptPrayerScreen Tests", function () {
 
             cy.get('[id="PrayerScreen_name_form"]')    //form
                 .type('testName')
+
+            cy.clickGoogleReCAPTCHA()
+            
 
             cy.contains("Submit")                              //sign up button
                 .click()
@@ -158,7 +172,8 @@ describe("GroupAcceptPrayerScreen Tests", function () {
 
         //visit home authorized, and click on the prayer
         cy.visit('/')
-            cy.contains(prayerBody)
+
+        cy.contains(prayerBody)
                 .click()
 
         //should contain "Anonymous"
