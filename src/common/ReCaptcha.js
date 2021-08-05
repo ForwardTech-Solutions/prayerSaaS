@@ -8,10 +8,12 @@ import ReCAPTCHA from "react-google-recaptcha";
 
  function ReCaptchaComp(props) {
 
-    var _key = process.env.REACT_APP_RECAPTCHA_SITE_KEY
+    //var _key = process.env.REACT_APP_RECAPTCHA_SITE_KEY
+    const _key = window.Cypress ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' : 
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY;
 
     useEffect(() => {
-        _key = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
+        
      }, [])
 
   return (

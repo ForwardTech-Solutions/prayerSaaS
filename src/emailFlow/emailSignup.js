@@ -63,7 +63,7 @@ function EmailSignupScreen(props) {
             .then(response => response.text())
             .then(result => {
                 setResponse(result)
-                //setResponse("Successfully Signed Up!");
+                setResponse("Successfully Signed Up!");
                 setAddress("")
                 setisLoading(false)
             })
