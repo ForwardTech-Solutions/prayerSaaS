@@ -87,9 +87,9 @@ function IndividualPrayerScreen(props) {
                   >
                     <Card.Header as="h5">{prayer.prayer}</Card.Header>
 
-                    <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
+                    <Card.Body style={{color: returnIfColor((prayer.prayergroup ? prayer.prayergroup : ''), 'lightblue')}}>
                       <p className="smallText">by:{prayer.username}</p>
-                      <p className="smallText">in:{prayer.prayergroup}</p>
+                      <p className="smallText">in:{prayer.prayergroup ? prayer.prayergroup : ""}</p>
                       <p className="smallText">from:{prayer.source ? prayer.source : ""}</p>
                       <p className="smallText">name:{prayer.fullName ? prayer.fullName : ""}</p>
                     </Card.Body>

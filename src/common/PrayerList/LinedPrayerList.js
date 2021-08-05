@@ -33,11 +33,11 @@ const PListLined = props => {
                                   </Col>
 
                                   <Col>
-                                      <p className="smallText">by:{prayer.username}</p>
+                                      <p className="smallText">by:{prayer.username ? prayer.username : ""}</p>
                                   </Col>
                                 
                                   <Col>
-                                      <p className="smallText">in:{prayer.prayergroup}</p>
+                                      <p className="smallText">in:{prayer.prayergroup ? prayer.prayergroup : ""}</p>
                                   </Col>
                              
                               </Row>

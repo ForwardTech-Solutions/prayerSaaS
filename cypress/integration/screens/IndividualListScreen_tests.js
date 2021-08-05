@@ -21,6 +21,8 @@ describe("IndividualPrayerScreen Tests", function () {
     it('loads from URL path (assumes data)', () => {
         cy.visit('/list/6ad60f20-d8f6-11eb-948a-ab706763a651')
 
+        cy.wait(1500)
+
         //how you know its individual_list_screen
         cy.get('[data-testid="thisList_title"]')
             .contains('Rolls Royce Noice')
@@ -33,6 +35,7 @@ describe("IndividualPrayerScreen Tests", function () {
         cy.contains('Rolls Royce Noice')
             .click()
 
+        cy.wait(1500)
 
         //how you know its individual_list_screen
         cy.get('[data-testid="thisList_title"]')
