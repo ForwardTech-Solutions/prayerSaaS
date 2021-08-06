@@ -3,7 +3,7 @@
 
 import "../../support/auth-provider-commands/cognito"
 
-describe("Create a prayer from dashboard, load it, and delete it", function () {
+describe("createAndDelete.js: Create a prayer from dashboard, load it, and delete it", function () {
 
     beforeEach(function () {
         cy.loginByCognitoApi(
@@ -21,8 +21,11 @@ describe("Create a prayer from dashboard, load it, and delete it", function () {
             .type(prayerName)
         cy.contains('Create Prayer').click()
 
+        
+
         //confirm that the prayer was created
         cy.contains(prayerName)
+        cy.wait(2000)   // give time for prayer to sumbmit before next tests
     })
 
     it('loads the prayer and delete the prayer', () => {

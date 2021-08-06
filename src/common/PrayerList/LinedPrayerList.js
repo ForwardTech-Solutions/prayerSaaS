@@ -2,12 +2,13 @@ import React from "react";
 import {Card, Row, Col} from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
-const PListLined = props => {
+const _LinedPrayerList = props => {
    
     return (
           <Col>
                 {
                   props.prayersList.map((prayer, index) => (
+                    prayer ?  //is there really anything to render?
                     <Row
                       key={index}
                     >
@@ -20,7 +21,7 @@ const PListLined = props => {
                           >
                             {/* <Card.Header as="h5">{prayer.prayer} (lined)</Card.Header> */}
 
-                            <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
+                            <Card.Body style={{color: returnIfColor((prayer.prayergroup ? prayer.prayergroup : ''), 'lightblue')}}>
                               <Row>  
          
                                   {/* checkbox */}
@@ -46,6 +47,7 @@ const PListLined = props => {
                           </Card>
                      
                     </Row>
+                    : <></> //if not, show nothing
                   ))
                 }
 
@@ -63,5 +65,5 @@ const PListLined = props => {
 
 
   
-  const LinedPrayerList = PListLined;
+  const LinedPrayerList = _LinedPrayerList;
   export default LinedPrayerList

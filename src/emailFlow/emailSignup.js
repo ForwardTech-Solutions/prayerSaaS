@@ -6,6 +6,7 @@ import ReCaptchaComp from "../common/ReCaptcha";
 function EmailSignupScreen(props) {
 
   const [address, setAddress] = useState()
+  const [name, setName] = useState()
   const [response, setResponse] = useState()
   const [isLoading, setisLoading] = useState()
   const [captchaToken, setCaptchaToken] = useState()
@@ -30,9 +31,10 @@ function EmailSignupScreen(props) {
 //   }
 
   function handleClick() {
-      setisLoading(true)
+    setisLoading(true)
     var result = validateEmail(address)
     if(result && captchaToken.length > 0) {
+
 
 
             var myHeaders = new Headers();
@@ -40,7 +42,7 @@ function EmailSignupScreen(props) {
 
             var jayson = JSON.stringify({
                 "address": address,
-                "fullName": "Tim Test",
+                "fullName": name ? name : "",
                 "prayergroup": props.match.params.group,
                 "token": captchaToken,
             })
@@ -59,13 +61,27 @@ function EmailSignupScreen(props) {
               //TO DO:  add cors to the backend response
 ////////////////////////////////////////////////////////////////////////////////
 
+            let fetchStatus
             fetch("https://45al5921x1.execute-api.us-east-1.amazonaws.com/dev/email", requestOptions)
-            .then(response => response.text())
+            .then(response => {
+              fetchStatus = response.status;
+              response.text()})
             .then(result => {
-                setResponse(result)
+              console.log("fetchStatus: ", fetchStatus)
+              if(fetchStatus === 200) {
+                console.log(result)
                 setResponse("Successfully Signed Up!");
                 setAddress("")
                 setisLoading(false)
+              } 
+              else if (fetchStatus === 400) {
+                setResponse("You seem like a robot (error code 400)... try again")
+                setisLoading(false) 
+              }
+              else {
+                setResponse("Error signing up. Please try again. (", fetchStatus, ")")
+                throw new Error("Error signing up: ", fetchStatus)
+              }
             })
             .catch(error => {
                 console.log('error', error)
@@ -115,7 +131,7 @@ function EmailSignupScreen(props) {
 
         <Card
             bg={"dark"}
-            style={{ width: '54rem' , height: '22rem', padding: '20px'}}
+            style={{ height: '36rem', padding: '20px'}}
             data-testid= "email_signup_card"
         >
             <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
@@ -126,6 +142,13 @@ function EmailSignupScreen(props) {
             <Card.Subtitle as="h4"  style={{textAlign: 'center'}}>Get weekly prayer lists, announcments, and encouragement</Card.Subtitle>
 
             <br/>
+
+            <Form.Label>Name</Form.Label>
+
+            <Form.Control size="lg" type="string" id="EmailSignup_fullName_form" placeholder="John Doe (optional)" onChange={e => {setName(e.target.value)}} />
+
+
+            <Form.Label>Email Address</Form.Label>
 
             <InputGroup>
                 <Form.Control size="lg" type="email" id="EmailSignup_email_form" placeholder="name@example.com" onChange={e => {setAddress(e.target.value)}} />

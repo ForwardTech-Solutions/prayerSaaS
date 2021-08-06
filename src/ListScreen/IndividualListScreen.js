@@ -59,12 +59,12 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
             headers: myHeaders
         };
         
-        fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/list/" + id, requestOptions)
+         fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/list/" + id, requestOptions)
             .then(response => response.text())
             .then(result => {
                 const parsed = JSON.parse(result)
                 setThisList(parsed)
-                console.log("fetch list from id:" + result)})
+                console.log("fetch list from id: ", result)})
             .catch(error => console.log('error', error));
 
     }
@@ -322,24 +322,42 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
 
         console.log(jsonBody)
 
+        let fetchResponse; 
         fetch(process.env.REACT_APP_EMAIL_SERVICE_REST_ENDPOINT + "/send-email", requestOptions)
-          .then(response => response.text())
+          .then(response => {
+                fetchResponse = response.status  
+                response.text()})
           .then(result => {
-            console.log('successfully sent emails')
-            setShowEmailModal(false)
-            setToastFeedback("Emails sent")
-            setShowFeedbackToast(true)
+              if(fetchResponse === 200) {
+                console.log('successfully sent emails')
+                setShowEmailModal(false)
+                setToastFeedback("Emails sent")
+                setShowFeedbackToast(true)
+              }
+              else if (fetchResponse === 400) {
+                console.log('error sending emails')
+                setShowEmailModal(false)
+                setToastFeedback("Error sending emails.  Error 400")
+                setShowFeedbackToast(true)
+              }
+              else {
+                console.log('error sending emails')
+                setShowEmailModal(false)
+                setToastFeedback("Error sending emails.  Error ", fetchResponse)
+                setShowFeedbackToast(true)
+              }
+            
           })
           .catch(error => {
               console.log('sent email Error', error)
               setShowEmailModal(false)
-              setToastFeedback("Error sending emails")
+              setToastFeedback("Error sending emails.  Unknown Error (fetch error)")
               setShowFeedbackToast(true)
           
             });
         
 
-                //TO DO: unlock the aws production teir
+                //TO DO: add verbose toast feedback based on response code
 
 
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Card, Button, Form, Row, Container, InputGroup} from "react-bootstrap";
+import {Card, Button, Form, Row, Container, InputGroup, Col} from "react-bootstrap";
 import { checkForBadWords } from "../common/functions/validation";
 
 import ReCaptchaComp from "../common/ReCaptcha";
@@ -122,23 +122,41 @@ function GroupAcceptPrayerScreen(props) {
             console.log(JSON.stringify(jayson))
 
             //handleClick fetch
+            let fetchStatus;
             fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/prayer/unauthorized", requestOptions)
-            .then(response => response.text())
+            .then(response => {
+              fetchStatus = response.status;
+              response.text()
+            })
             .then(result => {
-              console.log(result)
+              console.log('fetchStatus', fetchStatus)
+              if(fetchStatus === 200) {
 
-                //if results contains "hello"
-                if (result.indexOf("does not accept unauthorized prayer requests") > -1) {
-                    setResponse("Cannot add prayer requests to this group");
-                    setisLoading(false)
-                }
-                else {
+                  console.log(result)
                   setResponse("Successfully Submitted!");
                   setPrayer("")
                   setFullName("")
                   setisLoading(false)
-                }
-                
+              }
+              else if (fetchStatus === 400) {
+                console.log("400 error", result)
+                setResponse("Invalid URL.  No such prayer group exists" );
+                setisLoading(false)
+              } 
+              else if (fetchStatus === 401) {
+                  console.log("401 error", result)
+                  setResponse("Cannot add prayer requests to this group");
+                  setisLoading(false)
+              }
+              else if (fetchStatus === 469) {
+                console.log("469 error", result)
+                setResponse("You seem like a robot... try again");
+                setisLoading(false)
+            }
+              else {
+                setResponse("Error (", fetchStatus, ") reached when signing up. Please try again.")
+                throw new Error("Error signing up: ", fetchStatus)
+              }
             })
             .catch(error => {
                 console.log('TOM: fetch error: ', error)
@@ -166,11 +184,11 @@ function GroupAcceptPrayerScreen(props) {
         {validGroup === "loading" ? <h3>Loading...</h3> : 
           <Row>
 
-            
+            <Col >
             {validGroup === 'valid' ? 
                 <Card
                     bg={"dark"}
-                    style={{ width: '54rem' , height: '34rem', padding: '20px'}}
+                    style={{  height: '35rem', padding: '20px'}}
                     data-testid= "prayer_accept_card"
                 >
                     <Card.Body style={{color: returnIfColor("", 'lightblue')}}>
@@ -237,7 +255,7 @@ function GroupAcceptPrayerScreen(props) {
 
             } 
             {/* end of validGroup == 'valid' ? : */}
-
+            </Col>
           </Row>
         }
         {/* end of validGroup == 'loading' ? : */}

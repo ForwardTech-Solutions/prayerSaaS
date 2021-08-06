@@ -3,7 +3,7 @@
 
 import "../../support/auth-provider-commands/cognito"
 
-describe("IndividualPrayerScreen Tests", function () {
+describe("IndividualListScreen Tests", function () {
 
 
     beforeEach(function () {

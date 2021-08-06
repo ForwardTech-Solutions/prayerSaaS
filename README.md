@@ -64,7 +64,8 @@ this is how i keep track of stuff.  ik it sucks
 - captcha 
     - add captcha to email signup
     - add captcha to accept prayer
-
+- write tests for email blast, redirect page, qr, and captcha (at least as much as i could... qr? email_sent?)
+- optimize *unauthorized screens* for mobile 
 
 
 
@@ -77,12 +78,9 @@ this is how i keep track of stuff.  ik it sucks
 
 ##  ---- todo (currently working on)  ----
 ##  --------------------------------------
-- write tests for email blast, redirect page, qr, and captcha
 - Document use-cases and work flows
-- optimize for mobile 
-    -  *unauthorized screens* at least
-    - others if it's easy 
-
+- optimize others for mobile (if it's easy) 
+- push SaaS to AWS Amplify instance 
 
 
 ### todo other (before MVP alpha)
@@ -93,7 +91,9 @@ this is how i keep track of stuff.  ik it sucks
 
 
 
+
 ### todo long term: 
+- create unified 'response' method on backend
 - figure out how i wanna do prayer groups vs email groups (together or seperate)
         - validate that the group is a real group
 - incoroporate testing
@@ -103,9 +103,7 @@ this is how i keep track of stuff.  ik it sucks
 
 
 ## test to write:      
-- fix tests that use captcha  https://stackoverflow.com/questions/58684920/cypress-testing-a-contact-form-with-google-recaptcha 
 
-- double check the feedback on the email blast (individual List screen)
 
 ### maybe test? idk if/how
 - QR Object (on emailGroup)
@@ -120,9 +118,7 @@ this is how i keep track of stuff.  ik it sucks
 
 ## bugs: 
    - currentUser gets replaced with [ ] (blank) sometimes ((on dashboard.js))
-   - email response ((on email signup)) page says "Successful" on any network reply, not only success
-      - the captcha screens (group_accept and emailSignup) will return a 400 error if a bot.  The screen still displays a positive message
-   - clicking on one list link ((on the sidebar)) and then a different one does not change the screen, only the URL
+   - clicking on one List link ((on the sidebar)) and then a different List it does not change the screen, only the URL
    - you can have duplicates prayers in a list and can do so by just adding them to a list again 
 
 
