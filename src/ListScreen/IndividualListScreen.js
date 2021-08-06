@@ -321,7 +321,7 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
         };
 
         console.log(jsonBody)
-
+        console.log(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/send-email")
         let fetchResponse; 
         fetch(process.env.REACT_APP_EMAIL_SERVICE_REST_ENDPOINT + "/send-email", requestOptions)
           .then(response => {
