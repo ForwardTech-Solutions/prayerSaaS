@@ -23,7 +23,7 @@ import { Redirect } from 'react-router-dom';
                   console.log('redirectPage findDest fetch result: ' + result);
                   
                   if( typeof result === 'string' && result.length > 0) {
-                     window.location.replace("http://" + result.replaceAll('"','').replace('"',''));
+                     window.location.replace(result.replaceAll('"','').replace('"',''));
                   }
                   else {
                      setdisplayText('Error: internal error. We\'re sorry');
