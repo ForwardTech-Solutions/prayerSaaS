@@ -77,17 +77,17 @@ this is how i keep track of stuff.  ik it sucks
 
 
 ##  ---- todo (currently working on)  ----
-##  --------------------------------------
-- Document use-cases and work flows
-- optimize others for mobile (if it's easy) 
-- push SaaS to AWS Amplify instance 
+###  --------------------------------------
+- [ ] Document use-cases and work flows
+- [ ] optimize others for mobile (if it's easy) 
+- [ ] push SaaS to AWS Amplify instance 
 
 
 ### todo other (before MVP alpha)
-- move all API hardcodes to environment variables
-- Format emails in email blasts to be pretty 
-- Complete style refresh
-- fix bugs
+- [ ] move all API hardcodes to environment variables
+- [ ] Format emails in email blasts to be pretty 
+- [ ] Complete style refresh
+- [ ] fix bugs
 
 
 
