@@ -1,0 +1,30 @@
+
+Aug 19
+FOR FETCH:
+often you do fetch().then{response => blah1}.then{result => blah2}
+But if you add more code to balh1 other than just response.json(), it doesn't know to return the result of response.json().  So you have to add 'return'.  for example
+
+
+** THIS WORKS ** //because its just a stright up function
+fetch(url, requestOptions)
+    .then(response => response.text()  )
+
+** THIS WORKS ** //because your new {} function is returning what response.text() returns
+fetch(url, requestOptions)
+    .then(response => {
+        fetchStatus = response.status;
+        (((((((return))))))) response.text()
+    }).then(...)
+
+** THIS DOES NOT WORK ** //because your new {} function is returning nothing
+fetch(url, requestOptions)
+    .then(response => {
+        fetchStatus = response.status;
+        response.text()
+    }).then(...)
+
+and by 'work' i mean the second ".then()" has context of what result is
+
+
+
+

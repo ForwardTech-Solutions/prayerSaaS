@@ -6,6 +6,8 @@ import {Auth} from 'aws-amplify';
 
 import AddPrayerButton from "./components/AddPrayerButton/AddPrayerButton"
 import MyPrayerList from "../common/PrayerList/PrayerList"
+import LinedPrayerList from  "../common/PrayerList/LinedPrayerList"
+
 
 //info given: aws, groups
     // props:   AWSUser = {currentAWSUser}
@@ -167,6 +169,12 @@ function MyPrayerScreen(props) {
             <Row> 
                 <Col>
                   <h1>{props._focusedGroup ? props._focusedGroup.groupname + " | " + props._focusedGroup.id : ''} </h1>
+                  <LinedPrayerList 
+                    _currentUser={props.User}
+                    prayersList={prayers && props._focusedGroup ? 
+                      //filter out prayers that don't belong to the focused group
+                      prayers.filter(prayer => prayer.prayergroup === props._focusedGroup.groupname) : []} 
+                  />
                 </Col>
             </Row>
         

@@ -9,30 +9,63 @@ import { Redirect } from 'react-router-dom';
 
     useEffect(() => {
          function findDestination(id) {
-
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+    
 
             var requestOptions = {
+               headers: myHeaders,
                method: 'GET',
                redirect: 'follow',
                mode: 'cors',
              };
              
-             fetch(process.env.REACT_APP_QR_SERVICE_REST_ENDPOINT +  "/QR/" + id, requestOptions)
-               .then(response => response.text())
-               .then(result => {
-                  console.log('redirectPage findDest fetch result: ' + result);
-                  
-                  if( typeof result === 'string' && result.length > 0) {
-                     window.location.replace(result.replaceAll('"','').replace('"',''));
+            let fetchStatus;
+            fetch(process.env.REACT_APP_QR_SERVICE_REST_ENDPOINT +  "/QR/" + id, requestOptions)
+            .then(response => {
+              fetchStatus = response.status;
+              return response.json()
+            })
+            .then(result => {
+               console.log('fetchStatus', fetchStatus)
+               //console.log(JSON.parse(result))
+               console.log(result);
+
+               if(fetchStatus === 200) {
+                  if( typeof result.result === 'string' && result.result.length > 0) {
+                     let theDest = result.result.replaceAll('"','').replace('"','');
+                     if(!result.result.startsWith('http')) {
+                        theDest = "http://" + theDest
+                     }
+                     window.location.replace(theDest);
                   }
                   else {
+                     console.log('200 result, but bad: ', result)
                      setdisplayText('Error: internal error. We\'re sorry');
                   }
 
-               })
-               .catch(error => {console.log('error', error)
+               }
+               else if (fetchStatus === 400) {
+                  console.log("400 error", result)
+                  setdisplayText('Error: invalid URL');
+               } 
+               // else if (fetchStatus === 401) {
+               //    console.log("401 error", result)
+               // }
+               // else if (fetchStatus === 469) {
+               //   console.log("469 error", result)
+               // }
+               else if (fetchStatus === 400) {
+                  console.log("400 error", result)
+                  setdisplayText('Error: Internal Error. Please try again later');
+               } 
+               else {
+                 throw new Error("Error signing up: ", fetchStatus)
+               }
+             })
+             .catch(error => {console.log('error', error)
                setdisplayText('Error: invalid URL');
-               });
+             });
 
          }
 
