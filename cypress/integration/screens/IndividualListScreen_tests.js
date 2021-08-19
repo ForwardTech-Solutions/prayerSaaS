@@ -78,6 +78,8 @@ describe("IndividualListScreen Tests", function () {
         cy.contains('Send this List to Email Group')
             .click()
         
+        cy.wait(1000)
+        
         cy.contains('Send to which Email Group')
         cy.get("[data-testid='test_Group_1_send_button']")
             .click()

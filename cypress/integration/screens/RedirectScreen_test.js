@@ -12,7 +12,7 @@ describe("RedirectScreen Tests", function () {
 
     it('shows you "incorrect URL" on an bad URL', () => {
         cy.visit('/Redirect/tommyboy')
-        cy.contains('Error: invalid URL', { timeout: 1500 })
+        cy.contains('Error: invalid URL', { timeout: 3500 })
 
 
     })
