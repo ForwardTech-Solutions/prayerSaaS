@@ -69,14 +69,14 @@ function MyPrayerScreen(props) {
       //b. if no group, don't include group
       else if (!props._focusedGroup) {
         formToSend = {
-          prayer: createPrayerFormData.prayer,
+          content: createPrayerFormData.prayer,
           //description: createPrayerFormData.description
         }
       }
       //c. if group, just grab createPrayerFormData
       else {
         formToSend = createPrayerFormData
-        formToSend = {...formToSend, 'groupname': props._focusedGroup.groupname, 'groupid': props._focusedGroup.id}
+        formToSend = {...formToSend, 'groupname': props._focusedGroup.groupname, 'groupid': props._focusedGroup.id, content: createPrayerFormData.prayer}
       }
         
 
@@ -88,7 +88,7 @@ function MyPrayerScreen(props) {
 
       var putBody = JSON.stringify({
         "username": props.AWSUser,
-        "prayer": formToSend.prayer,
+        "content": formToSend.content,
         "prayergroup": formToSend.groupname ? formToSend.groupname : "",
         "prayerGroupId": formToSend.groupid ? formToSend.groupid : "",
         "source": "MyPrayerScreen",

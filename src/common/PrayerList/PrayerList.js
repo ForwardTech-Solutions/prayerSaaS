@@ -15,9 +15,10 @@ const PList = props => {
                         bg={"dark"} 
                         style={{ width: '18rem' }}
                       >
-                        <Card.Header as="h5">{prayer.prayer}</Card.Header>
+                        <Card.Header as="h5">{prayer.title || prayer.prayer}</Card.Header>
 
                         <Card.Body style={{color: returnIfColor(prayer.prayergroup, 'lightblue')}}>
+                          <p className="smallText">{prayer.content ? prayer.content : ""}</p>
                           <p className="smallText">by:{prayer.username}</p>
                           <p className="smallText">in:{prayer.prayergroup ? prayer.prayergroup : ""}</p>
                           <p className="smallText">from:{prayer.source ? prayer.source : ""}</p>

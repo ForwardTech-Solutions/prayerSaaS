@@ -63,7 +63,7 @@ import LinedPrayerList from "../common/PrayerList/LinedPrayerList"
             .then(response => response.text())
             .then(result => {
                 const parsed = JSON.parse(result)
-                setThisList(parsed)
+                setThisList(parsed.list)
                 console.log("fetch list from id: ", result)})
             .catch(error => console.log('error', error));
 

@@ -24,9 +24,10 @@ function IndividualPrayerScreen(props) {
         fetch(process.env.REACT_APP_PRAYER_REST_ENDPOINT + "/prayer/" + prayerID, requestOptions)
             .then(response => response.text())
             .then(result => {
-            const parsed = JSON.parse(result)
-            setPrayer(parsed)
-            console.log("individualFetch:" + result)})
+              console.log("individualFetch:", result)
+              const parsed = JSON.parse(result)
+              setPrayer(parsed.prayer)
+            })
             .catch(error => console.log('error', error));
       
       };

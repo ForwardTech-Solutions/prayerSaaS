@@ -37,6 +37,7 @@ function GroupAcceptPrayerScreen(props) {
         fetch("https://8tdq1phebd.execute-api.us-east-1.amazonaws.com/dev2/group/accepts_unathorized_prayers/" + groupID, requestOptions)
             .then(response => response.text())
             .then(result => {
+              var theResult = JSON.parse(result)
               //if group does not exist, result will contain "group does not exist"
               if (result.indexOf("group does not exist") !== -1) {
                 setValidGroup('doesNotExist')
@@ -44,7 +45,7 @@ function GroupAcceptPrayerScreen(props) {
                 
               }
               //result will be "true" or "false" (the strings, not the boolean).  true means the group is accepting prayers, false means it is not.
-              else if(result !== "true") {
+              else if(theResult.result !== "true") {
                 setValidGroup('notAccepting')
                 console.log("group is not accepting prayers")
                 
@@ -54,7 +55,9 @@ function GroupAcceptPrayerScreen(props) {
                 console.log("group exists and is accepting prayers")
                 
               }
-              console.log(result)
+              console.log(theResult)
+              console.log(theResult.result, typeof theResult.result)
+
             })
             .catch(error => {
               console.log('error', error)
